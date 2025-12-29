@@ -10,7 +10,7 @@ export default function SearchCompoenent({ placeHolder, linkPage }) {
   return (
     <Form
       action={`${linkPage}`}
-      className="bg-primary rounded-md max-sm:w-full relative flex items-center justify-start pl-2 gap-2 "
+      className="border bg-primary rounded-md max-sm:w-full relative flex items-center justify-start pl-2 gap-2 "
     >
       <input
         type="text"
@@ -18,7 +18,7 @@ export default function SearchCompoenent({ placeHolder, linkPage }) {
         value={isInput}
         onChange={(e) => setIsInput(e.target.value)}
         placeholder={placeHolder}
-        className="w-36 max-sm:w-full text-xs border-none outline-none ring-0 focus:ring-0 focus:outline-none bg-transparent top-0 bottom-0 left-7 overflow-hidden"
+        className="w-36 max-sm:w-full text-xs outline-none ring-0 focus:ring-0 focus:outline-none bg-transparent top-0 bottom-0 left-7 overflow-hidden"
       />
       <button
         title="Search button"

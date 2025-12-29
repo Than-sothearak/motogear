@@ -19,16 +19,16 @@ export const authConfig = {
       const isProtectedPath =
         pathname.startsWith("/dashboard") || pathname.startsWith("/invoice");
         
-      // Require login for protected paths
-      if (isProtectedPath) {
-        return isLoggedIn;
-      }
+    //   // Require login for protected paths
+    //   if (isProtectedPath) {
+    //     return isLoggedIn;
+    //   }
   
-      // Redirect logged-in users to /dashboard if accessing root or other pages last updated
-       if (isLoggedIn && (pathname === "/" || pathname === "/login" ) ) {
-        // Redirect to /dashboard if the user is logged in
-      return Response.redirect(new URL("/dashboard", nextUrl));
-    }
+    //   // Redirect logged-in users to /dashboard if accessing root or other pages last updated
+    //    if (isLoggedIn && (pathname === "/" || pathname === "/login" ) ) {
+    //     // Redirect to /dashboard if the user is logged in
+    //   return Response.redirect(new URL("/dashboard", nextUrl));
+    // }
 
     // 3. Allow other access
     return true;
