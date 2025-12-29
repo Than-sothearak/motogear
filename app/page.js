@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { connection } from "next/server";
 
 export default async function Home() {
-
+  await connection()
   // Not logged in: show login button
   return (
-    <div className="w-full min-h-screen bg-white flex items-center justify-center px-6 ">
+    <div className="w-full min-h-screen bg-primary flex items-center justify-center px-6 ">
       <div
         className={`w-full lg:w-96 gap-4 text-center transition-all duration-700 ease-out transform flex flex-col max-md:min-h-screen max-md:justify-around `}
       >
@@ -22,15 +23,15 @@ export default async function Home() {
           />
         </div>{" "}
         <div className="flex gap-4 flex-col">
-          <h2 className="text-blue-500 font-bold text-2xl">Make a booking</h2>
-          <p className="text-gray-500 text-sm mb-8">
+          <h2 className="text-priamrytext font-bold text-2xl">Make a booking</h2>
+          <p className="text-primarytext text-sm mb-8">
             A powerful tool to simplify how you handle bookings and manage your
             space. Focus on what matters, we’ll handle the rest.
           </p>
         </div>
         <Link
           href="/login"
-          className="bg-blue-600 text-white w-full px-8 py-3 rounded-xl text-lg font-semibold shadow-lg hover:bg-blue-700 active:scale-95 transition transform duration-300"
+          className="bg-tertiary text-primary w-full px-8 py-3 rounded-xl text-lg font-semibold shadow-lg hover:bg-tertiary/80 active:scale-95 transition transform duration-300"
         >
         
           Get Started

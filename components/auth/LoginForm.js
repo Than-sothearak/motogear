@@ -28,7 +28,7 @@ export default function LoginForm() {
                 type="email"
                 name="email"
                 placeholder="Enter your email"
-                className="w-full p-4 rounded-md bg-primary text-md"
+                className="border w-full p-4 rounded-md bg-primary text-md"
                 required
               />
             </div>
@@ -38,7 +38,7 @@ export default function LoginForm() {
                 type="password"
                 name="password"
                 placeholder="Enter your password"
-                className="w-full p-4 rounded-md bg-primary text-md"
+                className="border w-full p-4 rounded-md bg-primary text-md"
                 required
               />
             </div>
@@ -46,7 +46,7 @@ export default function LoginForm() {
             <input type="hidden" name="redirectTo" value={callbackUrl} />
           <button
             disabled={isPending}
-            className={`w-full rounded-lg bg-tertiary p-3 text-primarytext font-semibold hover:bg-secondary transition ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full rounded-lg bg-tertiary p-3 text-primary font-semibold hover:bg-tertiary/80 transition ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isPending ? 'Loading...' : 'Login'}
           </button>
@@ -57,10 +57,10 @@ export default function LoginForm() {
 
           <Link
             href="/"
-            className="flex items-center text-sm text-blue-600 hover:underline"
+            className="flex items-center text-sm text-tertiary hover:underline"
           >
             <svg
-              className="w-6 h-6 text-blue-600"
+              className="w-6 h-6 text-tertiary"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"

@@ -7,10 +7,10 @@ import { Service } from "@/models/Service";
 import { mongoDb } from "@/utils/connectDB";
 import { Navbar } from "@/components/layout/Navbar";
 
+await mongoDb();
+
 export default async function DashboardLayout({ children, admin, user }) {
   const session = await auth();
-  await mongoDb();
-  await new Promise((res) => setTimeout(res, 1000));
   const userId = await User.findOne({ _id: session?.user?._id });
 
   if (!session || !userId) {
@@ -55,28 +55,7 @@ export default async function DashboardLayout({ children, admin, user }) {
         </div>
       ) : (
         <div className="flex">
-          <div className="bg-primary">
-            <Sidebar
-              navigation={userNavigation}
-              session={session}
-              link={"/dashboard/client-page/"}
-            />
-          </div>
-          <div className="flex flex-col justify-between w-full lg:mx-4 lg:overflow-x-auto h-screen">
-            <div>
-              <Navbar
-                link={"/dashboard/client-page/"}
-                servicesCount={services.length}
-                navigation={userNavigation}
-                session={session}
-                user={JSON.parse(JSON.stringify(userId))}
-              />
-              <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
-
-              <div className="max-lg:mx-2 overflow-x-auto my-4">{user}</div>
-            </div>
-            <Footer />
-          </div>
+          <div>Welcome back user</div>
         </div>
       )}
     </>
