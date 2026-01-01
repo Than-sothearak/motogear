@@ -1,0 +1,186 @@
+"use server";
+import { Product } from "@/models/Product";
+import { mongoDb } from "@/utils/connectDB";
+import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
+
+await mongoDb();
+
+// Fetch products with pagination and search
+export async function getProducts(query, page) {
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
+
+  const ITEM_PER_PAGE = 10;
+
+  try {
+    if (query) {
+      const products = await Product.find({
+        $or: [{ productName: { $regex: query, $options: "i" } }],
+      });
+      const count = products.length;
+      return { products, count };
+    }
+
+    const count = await Product.countDocuments();
+    const products = await Product.find()
+      .sort({ createdAt: -1 })
+      .limit(ITEM_PER_PAGE)
+      .skip(ITEM_PER_PAGE * (page - 1));
+
+    return { products, count };
+  } catch (err) {
+    console.error(err);
+    throw new Error("Failed to fetch products!");
+  }
+}
+
+// Add new product
+export async function addProduct(prevState, formData) {
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
+
+   if (!formData || typeof formData.get !== "function") {
+    console.error("Invalid or missing formData:", formData);
+    return { error: "No valid form data received" };
+  }
+
+  const productName = formData.get("productName");
+  const brandName = formData.get("brandName");
+  const slug = formData.get("slug");
+  const description = formData.get("description");
+  const basePrice = parseFloat(formData.get("basePrice")) || 0;
+  const discount = parseFloat(formData.get("discount")) || 0;
+  const category = formData.get("category");
+  const status = formData.get("status");
+  const variantData = formData.get("variants"); // expect JSON string
+  const imagesFiles = formData.getAll("images"); // multiple images
+
+  let errors = {};
+
+  try {
+  // if (!productName) errors.productName = "Product name is required";
+  // if (!brandName) errors.brandName = "Brand name is required";
+  // if (!category) errors.category = "Category is required";
+  // if (!basePrice) errors.basePrice = "Base price is required";
+
+  console.log(errors)
+  if (Object.keys(errors).length > 0) return { errors, success: false };
+  
+  console.log(formData)
+  
+ 
+    // Upload images to S3
+    let imageUrls = [];
+    for (const file of imagesFiles) {
+      if (file && file.size > 0) {
+        const url = await uploadFileToS3(file);
+        imageUrls.push(url);
+      }
+    }
+
+    const variants = variantData ? JSON.parse(variantData) : [];
+
+    const productData = {
+      productName,
+      brandName,
+      slug,
+      description,
+      basePrice,
+      discount,
+      category,
+      status,
+      variants,
+      images: imageUrls,
+    };
+
+    console.log(productData)
+    await Product.create(productData);
+
+    // revalidatePath("/dashboard/products/");
+    // redirect("/dashboard/products/");
+  } catch (err) {
+    console.error("Error saving product:", err);
+    return { error: "Failed to save product", success: false };
+  }
+}
+
+// Update existing product
+export async function updateProduct(productId, prevState, formData) {
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
+
+  if (!formData || typeof formData.get !== "function") {
+    return { error: "No valid form data received" };
+  }
+
+  try {
+    const product = await Product.findById(productId);
+    if (!product) {
+      return { error: "Product not found", success: false };
+    }
+
+    const productName = formData.get("productName");
+    const brandName = formData.get("brandName");
+    const description = formData.get("description");
+    const basePrice = parseFloat(formData.get("basePrice")) || 0;
+    const discount = parseFloat(formData.get("discount")) || 0;
+    const category = formData.get("category");
+    const status = formData.get("status");
+    const variantData = formData.get("variants"); // JSON string
+    const imagesFiles = formData.getAll("images"); // multiple images
+
+    let errors = {};
+    if (!productName) errors.productName = "Product name is required";
+    if (!brandName) errors.brandName = "Brand name is required";
+    if (!category) errors.category = "Category is required";
+    if (Object.keys(errors).length > 0) return { errors, success: false };
+
+    // Upload new images
+    let newImages = [...product.images]; // keep existing
+    for (const file of imagesFiles) {
+      if (file && file.size > 0) {
+        const url = await uploadFileToS3(file);
+        newImages.push(url);
+      }
+    }
+
+    // Optional: remove old images if specified in prevState
+    if (prevState?.removeImages?.length) {
+      for (const url of prevState.removeImages) {
+        const key = url.split("/").pop();
+        if (key) await deleteFileFromS3(key);
+        newImages = newImages.filter((i) => i !== url);
+      }
+    }
+
+    const variants = variantData ? JSON.parse(variantData) : product.variants;
+
+    const productData = {
+      productName,
+      brandName,
+      description,
+      basePrice,
+      discount,
+      category,
+      status,
+      variants,
+      images: newImages,
+    };
+
+    await Product.updateOne({ _id: productId }, productData);
+
+    return { success: true, message: "Product successfully updated" };
+  } catch (err) {
+    console.error("Error updating product:", err);
+    return { error: "Failed to update product", success: false };
+  }
+}

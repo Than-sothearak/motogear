@@ -40,7 +40,7 @@ export default function ChooseImageFile({files ,setFiles}) {
           <div className="flex justify-center w-full">
             <label
               htmlFor="fileInput"
-              className="cursor-pointer bg-tertiary text-primarytext px-6 py-3 rounded-lg hover:bg-secondary transition duration-200"
+              className="cursor-pointer bg-blue-600 text-secondarytext px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-200"
             >
               Choose Image
             </label>
