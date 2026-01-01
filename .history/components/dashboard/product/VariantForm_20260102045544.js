@@ -112,16 +112,9 @@ const removeVariantImage = (variantIndex) => {
 
       {/* Variants */}
       <div className="border rounded-md py-4 w-full">
-        <div className="flex justify-between items-center mb-2 font-bold border-b px-3 pb-2">
+        <div className="block mb-2 font-bold border-b px-3 pb-2">
             
           <h1>Variants</h1>
-             <button
-            onClick={addVariants}
-            type="button"
-            className="mt-2 bg-tertiary hover:bg-tertiary/80 text-white px-4 py-2 rounded-lg"
-          >
-            Add Variant
-          </button>
         </div>
 
         <div className="px-3 space-y-2 text-sm">
@@ -197,13 +190,13 @@ const removeVariantImage = (variantIndex) => {
               {/* Variant Images */}
               <div className="border rounded-md py-4">
                 <div className="block mb-2 font-bold border-b px-3 pb-2">
-                  <h1>Variant Image</h1>
+                  <h1>Product Images</h1>
                 </div>
 
                 <div className="px-3">
                   <label
                     className={`${
-                      !variant.image ? "" : "hidden"
+                      !variant.images ? "" : "hidden"
                     } flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-tertiary/40 transition`}
                   >
                     <span className="text-gray-500 text-sm">
@@ -217,7 +210,7 @@ const removeVariantImage = (variantIndex) => {
                     />
                   </label>
 
-                 {variant.image && (
+                 {!variant.images && (
                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
                 
                       <div
@@ -225,7 +218,7 @@ const removeVariantImage = (variantIndex) => {
                         className="relative w-28 aspect-square rounded-lg overflow-hidden border"
                       >
                         <Image
-                          src={variant.image.preview}
+                          src={variant.images}
                           alt="preview"
                           fill
                           unoptimized
@@ -234,7 +227,7 @@ const removeVariantImage = (variantIndex) => {
 
                         <button
                           type="button"
-                          onClick={() => removeVariantImage(index)}
+                          onClick={() => removeVariantImage(index, idx)}
                           className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded"
                         >
                           ✕
@@ -248,7 +241,13 @@ const removeVariantImage = (variantIndex) => {
             </div>
           ))}
 
-       
+          <button
+            onClick={addVariants}
+            type="button"
+            className="mt-2 bg-tertiary hover:bg-tertiary/80 text-white px-4 py-2 rounded-lg"
+          >
+            Add Variant
+          </button>
         </div>
       </div>
     </div>

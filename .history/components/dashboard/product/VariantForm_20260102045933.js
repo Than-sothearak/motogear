@@ -57,6 +57,8 @@ const removeVariantImage = (variantIndex) => {
   );
 };
 
+console.log(variants)
+
   return (
     <div className="flex gap-4 max-2xl:flex-col">
       {/* Properties */}

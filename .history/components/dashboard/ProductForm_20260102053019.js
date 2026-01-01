@@ -66,16 +66,14 @@ function ProductForm({ productData, categories }) {
    variants.forEach((variant, index) => {
   if (variant.image?.file) {
     formData.append(`variantImages[${index}]`, variant.image.file);
-   
   }
 });
-
-
 
 
     const validationErrors = validateProduct({ ...payload });
     setErrors(validationErrors);
 
+  console.log(errors)
     try {
       const res = await fetch("/api/products", {
         method: "POST",
@@ -87,6 +85,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
+        console.error(data.message)
         console.log(data)
         alert(data.message)
       }

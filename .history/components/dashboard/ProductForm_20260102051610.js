@@ -22,6 +22,7 @@ function ProductForm({ productData, categories }) {
 
   const [variants, setVariants] = useState(
     productData?.variants || [
+      { size: "", color: "", stock: 0, price: 0, sku: "", images: null },
     ]
   );
 
@@ -40,14 +41,20 @@ function ProductForm({ productData, categories }) {
       [name]: finalValue,
     }));
   };
-   const payload = {
-      productName: formData.productName,
-      brandName: formData.brandName,
-      slug: formData.slug,
-      basePrice: formData.basePrice,
-      discount: formData.discount,
-      category: formData.category,
-      status: formData.status,
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    const payload = {
+      productName,
+      brandName,
+      slug,
+      basePrice,
+      discount,
+      category,
+      status,
       variants: variants.map(v => ({
         size: v.size,
         color: v.color,
@@ -57,24 +64,18 @@ function ProductForm({ productData, categories }) {
       })),
     };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-
     formData.append("data", JSON.stringify(payload));
 
-   variants.forEach((variant, index) => {
-  if (variant.image?.file) {
-    formData.append(`variantImages[${index}]`, variant.image.file);
-   
-  }
-});
+    variants.forEach((variant, index) => {
+      if (variant.image?.file) {
+        formData.append(`variantImages[${index}]`, variant.image.file);
+      }
+    });
 
 
+    // const validationErrors = validateProduct({ ...payload });
+    // setErrors(validationErrors);
 
-
-    const validationErrors = validateProduct({ ...payload });
-    setErrors(validationErrors);
 
     try {
       const res = await fetch("/api/products", {
@@ -87,7 +88,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
-        console.log(data)
+        console.error(data.message)
         alert(data.message)
       }
     } catch (err) {

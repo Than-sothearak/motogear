@@ -29,7 +29,12 @@ export async function POST(req) {
         const formData = await req.formData();
         const jsonData = formData.get("data");
         const payload = JSON.parse(jsonData);
-    
+        // -----------------------
+        // 1. Extract text fields
+        // -----------------------
+        // -----------------------
+        // 2. Extract variants
+        // -----------------------
         let variantsWithFiles = [];
         let index = 0;
 
@@ -37,7 +42,7 @@ export async function POST(req) {
             const file = formData.get(`variantImages[${index}]`);
             return { ...v, image: file }; // File object here
         });
-   
+   console.log(variantsWithFiles)
         const errors = validateProduct(payload);
 
         if (!errors.success) {
@@ -51,15 +56,20 @@ export async function POST(req) {
         // 3. Access files
         // -----------------------
         for (const variant of variantsWithFiles) {
+            const uploadedImages = "";
+
             const url = await uploadFileToS3(variant.image); // or Cloudinary
-            variant.images = url
+            uploadedImages.push(url);
+            variant.images = uploadedImages;
         }
         // -----------------------
         // 4. Save to MongoDB
-    
- 
-        await Product.create({...payload, variants: variantsWithFiles });
-        return NextResponse.json({ success: true, message: "Your product created" });
+        console.log(variantsWithFiles)
+        // await Product.create({...payload, variants});
+
+
+
+        return NextResponse.json({ success: true });
 
     } catch (err) {
         if (err instanceof z.ZodError) {
@@ -69,9 +79,9 @@ export async function POST(req) {
             );
         }
 
-        console.error(err.errorResponse.errmsg);
+        console.error(err);
         return NextResponse.json(
-            { success: false, message: err.errorResponse.errmsg },
+            { success: false, message: "Server error" },
             { status: 500 }
         );
     }

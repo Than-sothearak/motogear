@@ -57,6 +57,8 @@ const removeVariantImage = (variantIndex) => {
   );
 };
 
+console.log(variants)
+
   return (
     <div className="flex gap-4 max-2xl:flex-col">
       {/* Properties */}
@@ -112,7 +114,7 @@ const removeVariantImage = (variantIndex) => {
 
       {/* Variants */}
       <div className="border rounded-md py-4 w-full">
-        <div className="flex justify-between items-center mb-2 font-bold border-b px-3 pb-2">
+        <div className="flex justify-between mb-2 font-bold border-b px-3 pb-2">
             
           <h1>Variants</h1>
              <button

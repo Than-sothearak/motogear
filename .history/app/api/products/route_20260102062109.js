@@ -57,9 +57,18 @@ export async function POST(req) {
         // -----------------------
         // 4. Save to MongoDB
     
- 
-        await Product.create({...payload, variants: variantsWithFiles });
-        return NextResponse.json({ success: true, message: "Your product created" });
+     const p = {
+        ...payload, 
+            variants:  variantsWithFiles
+        
+     }
+
+     console.log(p)
+        // await Product.create({...payload, variants: variantsWithFiles });
+
+
+
+        return NextResponse.json({ success: true });
 
     } catch (err) {
         if (err instanceof z.ZodError) {

@@ -22,6 +22,7 @@ function ProductForm({ productData, categories }) {
 
   const [variants, setVariants] = useState(
     productData?.variants || [
+      { size: "", color: "", stock: 0, price: 0, sku: "", images: null },
     ]
   );
 
@@ -61,20 +62,20 @@ function ProductForm({ productData, categories }) {
     e.preventDefault();
     const formData = new FormData();
 
-    formData.append("data", JSON.stringify(payload));
+ 
+console.log(payload); 
+    // formData.append("data", JSON.stringify(payload));
 
    variants.forEach((variant, index) => {
   if (variant.image?.file) {
     formData.append(`variantImages[${index}]`, variant.image.file);
-   
   }
 });
 
 
+    // const validationErrors = validateProduct({ ...payload });
+    // setErrors(validationErrors);
 
-
-    const validationErrors = validateProduct({ ...payload });
-    setErrors(validationErrors);
 
     try {
       const res = await fetch("/api/products", {
@@ -87,7 +88,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
-        console.log(data)
+        console.error(data.message)
         alert(data.message)
       }
     } catch (err) {

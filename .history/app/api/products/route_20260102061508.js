@@ -37,7 +37,7 @@ export async function POST(req) {
             const file = formData.get(`variantImages[${index}]`);
             return { ...v, image: file }; // File object here
         });
-   
+   console.log(variantsWithFiles)
         const errors = validateProduct(payload);
 
         if (!errors.success) {
@@ -56,10 +56,12 @@ export async function POST(req) {
         }
         // -----------------------
         // 4. Save to MongoDB
-    
- 
+     
         await Product.create({...payload, variants: variantsWithFiles });
-        return NextResponse.json({ success: true, message: "Your product created" });
+
+
+
+        return NextResponse.json({ success: true });
 
     } catch (err) {
         if (err instanceof z.ZodError) {
@@ -69,9 +71,9 @@ export async function POST(req) {
             );
         }
 
-        console.error(err.errorResponse.errmsg);
+        console.error(err.errorResponse);
         return NextResponse.json(
-            { success: false, message: err.errorResponse.errmsg },
+            { success: false, message: "Server error" },
             { status: 500 }
         );
     }

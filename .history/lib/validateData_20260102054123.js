@@ -21,7 +21,7 @@ export const productSchema = z.object({
 export const validateProduct = (formData) => {
   try {
     productSchema.parse(formData);
-    return {success: true}; // no errors
+    return {validate: "sds"}; // no errors
   } catch (err) {
     const errors = {};
     err.errors.forEach((e) => {

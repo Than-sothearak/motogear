@@ -66,11 +66,8 @@ function ProductForm({ productData, categories }) {
    variants.forEach((variant, index) => {
   if (variant.image?.file) {
     formData.append(`variantImages[${index}]`, variant.image.file);
-   
   }
 });
-
-
 
 
     const validationErrors = validateProduct({ ...payload });

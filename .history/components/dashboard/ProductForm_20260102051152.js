@@ -22,6 +22,7 @@ function ProductForm({ productData, categories }) {
 
   const [variants, setVariants] = useState(
     productData?.variants || [
+      { size: "", color: "", stock: 0, price: 0, sku: "", images: null },
     ]
   );
 
@@ -40,41 +41,37 @@ function ProductForm({ productData, categories }) {
       [name]: finalValue,
     }));
   };
-   const payload = {
-      productName: formData.productName,
-      brandName: formData.brandName,
-      slug: formData.slug,
-      basePrice: formData.basePrice,
-      discount: formData.discount,
-      category: formData.category,
-      status: formData.status,
-      variants: variants.map(v => ({
-        size: v.size,
-        color: v.color,
-        stock: v.stock,
-        price: v.price,
-        sku: v.sku,
-      })),
-    };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
-    formData.append("data", JSON.stringify(payload));
+    const payLoad = {
+      productName,
+      brandName,
+      slug,
+      basePrice: Number(basePrice),
+      discount: Number(discount),
+      category,
+      status,
+      variants: variants.map(v => ({
+        size: v.size,
+        color: v.color,
+        stock: Number(v.stock),
+        price: Number(v.price),
+        sku: v.sku,
+        imageCount: v.images.length
+      }))
+    }
 
-   variants.forEach((variant, index) => {
-  if (variant.image?.file) {
-    formData.append(`variantImages[${index}]`, variant.image.file);
-   
-  }
-});
+    formData.append("data", JSON.stringify(payLoad));
 
+    console.log(formData)
 
-
-
-    const validationErrors = validateProduct({ ...payload });
+    const validationErrors = validateProduct({ ...payLoad });
     setErrors(validationErrors);
+
 
     try {
       const res = await fetch("/api/products", {
@@ -87,7 +84,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
-        console.log(data)
+        console.error(data.message)
         alert(data.message)
       }
     } catch (err) {

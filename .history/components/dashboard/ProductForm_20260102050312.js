@@ -22,6 +22,7 @@ function ProductForm({ productData, categories }) {
 
   const [variants, setVariants] = useState(
     productData?.variants || [
+      { size: "", color: "", stock: 0, price: 0, sku: "", images: null },
     ]
   );
 
@@ -40,41 +41,40 @@ function ProductForm({ productData, categories }) {
       [name]: finalValue,
     }));
   };
-   const payload = {
-      productName: formData.productName,
-      brandName: formData.brandName,
-      slug: formData.slug,
-      basePrice: formData.basePrice,
-      discount: formData.discount,
-      category: formData.category,
-      status: formData.status,
-      variants: variants.map(v => ({
-        size: v.size,
-        color: v.color,
-        stock: v.stock,
-        price: v.price,
-        sku: v.sku,
-      })),
-    };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
-    formData.append("data", JSON.stringify(payload));
+    // product fields
+    formData.append("productName", productName);
+    formData.append("brandName", brandName);
+    formData.append("slug", slug);
+    formData.append("basePrice", Number(basePrice));
+    formData.append("discount", discount);
+    formData.append("category", category);
+    formData.append("status", status);
 
-   variants.forEach((variant, index) => {
-  if (variant.image?.file) {
-    formData.append(`variantImages[${index}]`, variant.image.file);
-   
-  }
-});
+    // variants + images
+    variants.forEach((variant, vIndex) => {
+      formData.append(`variants[${vIndex}][size]`, variant.size);
+      formData.append(`variants[${vIndex}][color]`, variant.color);
+      formData.append(`variants[${vIndex}][stock]`, Number(variant.stock));
+      formData.append(`variants[${vIndex}][price]`, Number(variant.price));
+      formData.append(`variants[${vIndex}][sku]`, variant.sku);
 
+      variant.images.forEach((img) => {
+        // VERY IMPORTANT: img.file must be File
+        formData.append(`variants[${vIndex}][images]`, img.file);
+      });
+    });
 
+    console.log(formData)
 
-
-    const validationErrors = validateProduct({ ...payload });
+    const validationErrors = validateProduct({ ...formData });
     setErrors(validationErrors);
+
 
     try {
       const res = await fetch("/api/products", {
@@ -87,7 +87,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
-        console.log(data)
+        console.error(data.message)
         alert(data.message)
       }
     } catch (err) {
@@ -123,7 +123,7 @@ function ProductForm({ productData, categories }) {
                   {errors?.brandName && <p className="text-red-500">*{errors.brandName}</p>}
                 </div>
                 <input
-                  id="brandName"
+                id="brandName"
                   type="text"
                   name="brandName"
                   value={formData.brandName}

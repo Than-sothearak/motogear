@@ -22,6 +22,7 @@ function ProductForm({ productData, categories }) {
 
   const [variants, setVariants] = useState(
     productData?.variants || [
+      { size: "", color: "", stock: 0, price: 0, sku: "", images: null },
     ]
   );
 
@@ -40,7 +41,13 @@ function ProductForm({ productData, categories }) {
       [name]: finalValue,
     }));
   };
-   const payload = {
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    const payload = {
       productName: formData.productName,
       brandName: formData.brandName,
       slug: formData.slug,
@@ -56,25 +63,19 @@ function ProductForm({ productData, categories }) {
         sku: v.sku,
       })),
     };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-
-    formData.append("data", JSON.stringify(payload));
+console.log(payload); 
+    // formData.append("data", JSON.stringify(payload));
 
    variants.forEach((variant, index) => {
   if (variant.image?.file) {
     formData.append(`variantImages[${index}]`, variant.image.file);
-   
   }
 });
 
 
+    // const validationErrors = validateProduct({ ...payload });
+    // setErrors(validationErrors);
 
-
-    const validationErrors = validateProduct({ ...payload });
-    setErrors(validationErrors);
 
     try {
       const res = await fetch("/api/products", {
@@ -87,7 +88,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
-        console.log(data)
+        console.error(data.message)
         alert(data.message)
       }
     } catch (err) {

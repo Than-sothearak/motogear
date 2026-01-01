@@ -22,6 +22,7 @@ function ProductForm({ productData, categories }) {
 
   const [variants, setVariants] = useState(
     productData?.variants || [
+      { size: "", color: "", stock: 0, price: 0, sku: "", images: null },
     ]
   );
 
@@ -40,41 +41,25 @@ function ProductForm({ productData, categories }) {
       [name]: finalValue,
     }));
   };
-   const payload = {
-      productName: formData.productName,
-      brandName: formData.brandName,
-      slug: formData.slug,
-      basePrice: formData.basePrice,
-      discount: formData.discount,
-      category: formData.category,
-      status: formData.status,
-      variants: variants.map(v => ({
-        size: v.size,
-        color: v.color,
-        stock: v.stock,
-        price: v.price,
-        sku: v.sku,
-      })),
-    };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
-    formData.append("data", JSON.stringify(payload));
+  formData.append("data", JSON.stringify({
 
-   variants.forEach((variant, index) => {
-  if (variant.image?.file) {
-    formData.append(`variantImages[${index}]`, variant.image.file);
-   
-  }
-});
+}));
 
 
 
+  
 
-    const validationErrors = validateProduct({ ...payload });
+    console.log(formData)
+
+    const validationErrors = validateProduct({ ...formData });
     setErrors(validationErrors);
+
 
     try {
       const res = await fetch("/api/products", {
@@ -87,7 +72,7 @@ function ProductForm({ productData, categories }) {
         alert("Product saved!");
         router.refresh();
       } else {
-        console.log(data)
+        console.error(data.message)
         alert(data.message)
       }
     } catch (err) {
@@ -123,7 +108,7 @@ function ProductForm({ productData, categories }) {
                   {errors?.brandName && <p className="text-red-500">*{errors.brandName}</p>}
                 </div>
                 <input
-                  id="brandName"
+                id="brandName"
                   type="text"
                   name="brandName"
                   value={formData.brandName}

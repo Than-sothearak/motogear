@@ -48,13 +48,6 @@ function ProductForm({ productData, categories }) {
       discount: formData.discount,
       category: formData.category,
       status: formData.status,
-      variants: variants.map(v => ({
-        size: v.size,
-        color: v.color,
-        stock: v.stock,
-        price: v.price,
-        sku: v.sku,
-      })),
     };
 
   const handleSubmit = async (e) => {

@@ -57,6 +57,8 @@ const removeVariantImage = (variantIndex) => {
   );
 };
 
+console.log(variants)
+
   return (
     <div className="flex gap-4 max-2xl:flex-col">
       {/* Properties */}
@@ -112,16 +114,9 @@ const removeVariantImage = (variantIndex) => {
 
       {/* Variants */}
       <div className="border rounded-md py-4 w-full">
-        <div className="flex justify-between items-center mb-2 font-bold border-b px-3 pb-2">
+        <div className="block mb-2 font-bold border-b px-3 pb-2">
             
           <h1>Variants</h1>
-             <button
-            onClick={addVariants}
-            type="button"
-            className="mt-2 bg-tertiary hover:bg-tertiary/80 text-white px-4 py-2 rounded-lg"
-          >
-            Add Variant
-          </button>
         </div>
 
         <div className="px-3 space-y-2 text-sm">
@@ -197,7 +192,7 @@ const removeVariantImage = (variantIndex) => {
               {/* Variant Images */}
               <div className="border rounded-md py-4">
                 <div className="block mb-2 font-bold border-b px-3 pb-2">
-                  <h1>Variant Image</h1>
+                  <h1>Product Images</h1>
                 </div>
 
                 <div className="px-3">
@@ -248,7 +243,13 @@ const removeVariantImage = (variantIndex) => {
             </div>
           ))}
 
-       
+          <button
+            onClick={addVariants}
+            type="button"
+            className="mt-2 bg-tertiary hover:bg-tertiary/80 text-white px-4 py-2 rounded-lg"
+          >
+            Add Variant
+          </button>
         </div>
       </div>
     </div>
