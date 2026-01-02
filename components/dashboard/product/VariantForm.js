@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { BiPlusCircle } from "react-icons/bi";
 
 const VariantForm = ({ setVariants, setProperties, properties, variants,
  }) => {
@@ -115,17 +116,20 @@ const removeVariantImage = (variantIndex) => {
         <div className="flex justify-between items-center mb-2 font-bold border-b px-3 pb-2">
             
           <h1>Variants</h1>
-             <button
-            onClick={addVariants}
-            type="button"
-            className="mt-2 bg-tertiary hover:bg-tertiary/80 text-white px-4 py-2 rounded-lg"
-          >
-            Add Variant
-          </button>
+   
         </div>
 
-        <div className="px-3 space-y-2 text-sm">
-          {variants.map((variant, index) => (
+        <div className="px-3 space-y-2">
+
+                    <button
+            onClick={addVariants}
+            type="button"
+            className="flex gap-2 mt-2 bg-tertiary hover:bg-tertiary/80 text-white px-2 py-2 rounded-lg whitespace-nowrap"
+          >
+          <BiPlusCircle size={22}/> <p>Add variant</p>
+          </button>
+         <div className="space-y-2 text-sm max-h-96 overflow-auto"> 
+           {variants.map((variant, index) => (
             <div key={index} className="flex-col flex gap-4">
               <div className="flex gap-2 max-sm:flex-wrap">
                 <input
@@ -247,6 +251,7 @@ const removeVariantImage = (variantIndex) => {
               </div>
             </div>
           ))}
+         </div>
 
        
         </div>

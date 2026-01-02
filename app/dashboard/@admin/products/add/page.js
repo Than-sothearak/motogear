@@ -1,5 +1,5 @@
 import { getCategories } from '@/actions/categories'
-import ProductForm from '@/components/dashboard/ProductForm'
+import ProductForm from '@/components/dashboard/product/ProductForm';
 import React from 'react'
 
 const addProductPage = async () => {

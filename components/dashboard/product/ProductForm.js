@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import VariantForm from "./product/VariantForm";
+import VariantForm from "./VariantForm";
 import { validateProduct } from "@/lib/validateData";
+import ChooseImageFiles from "../ChooseImageFiles";
 
 function ProductForm({ productData, categories }) {
   const router = useRouter();
@@ -18,44 +19,40 @@ function ProductForm({ productData, categories }) {
     category: productData?.category || "",
     status: productData?.status || "active",
   });
-  const [errors, setErrors] = useState("")
+  const [errors, setErrors] = useState("");
+  const [files, setFiles] = useState("");
+  const [variants, setVariants] = useState(productData?.variants || []);
 
-  const [variants, setVariants] = useState(
-    productData?.variants || [
-    ]
-  );
-
-  const [properties, setProperties] = useState(
-    productData?.properties || []
-  );
+  const [properties, setProperties] = useState(productData?.properties || []);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
 
     // If the input type is number, convert the string value to a real number
-    const finalValue = type === "number" ? (value === "" ? "" : Number(value)) : value;
+    const finalValue =
+      type === "number" ? (value === "" ? "" : Number(value)) : value;
 
     setFormData((prev) => ({
       ...prev,
       [name]: finalValue,
     }));
   };
-   const payload = {
-      productName: formData.productName,
-      brandName: formData.brandName,
-      slug: formData.slug,
-      basePrice: formData.basePrice,
-      discount: formData.discount,
-      category: formData.category,
-      status: formData.status,
-      variants: variants.map(v => ({
-        size: v.size,
-        color: v.color,
-        stock: v.stock,
-        price: v.price,
-        sku: v.sku,
-      })),
-    };
+  const payload = {
+    productName: formData.productName,
+    brandName: formData.brandName,
+    slug: formData.slug,
+    basePrice: formData.basePrice,
+    discount: formData.discount,
+    category: formData.category,
+    status: formData.status,
+    variants: variants.map((v) => ({
+      size: v.size,
+      color: v.color,
+      stock: v.stock,
+      price: v.price,
+      sku: v.sku,
+    })),
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,16 +60,18 @@ function ProductForm({ productData, categories }) {
 
     formData.append("data", JSON.stringify(payload));
 
-   variants.forEach((variant, index) => {
-  if (variant.image?.file) {
-    formData.append(`variantImages[${index}]`, variant.image.file);
-   
-  }
-});
+    variants.forEach((variant, index) => {
+      if (variant.image?.file) {
+        formData.append(`variantImages[${index}]`, variant.image.file);
+      }
+    });
 
-
-
-
+   if (files.length > 0 ) {
+         files.forEach((file, index) => {
+    formData.append("imageFiles", file.file); 
+    // 👆 SAME key name for multiple files
+  });
+   } 
     const validationErrors = validateProduct({ ...payload });
     setErrors(validationErrors);
 
@@ -84,11 +83,11 @@ function ProductForm({ productData, categories }) {
 
       const data = await res.json();
       if (data.success) {
-        alert("Product saved!");
-        router.refresh();
+        alert(data.message);
+        router.push("/dashboard/products/");
       } else {
-        console.log(data)
-        alert(data.message)
+        console.log(data);
+        alert(data.message);
       }
     } catch (err) {
       console.error(err);
@@ -118,9 +117,11 @@ function ProductForm({ productData, categories }) {
 
             <div className="space-y-3 px-3">
               <div className="space-y-2 text-sm">
-                <div className="flex gap-4">
-                  <label className={`${errors?.brandName ? 'text-red-500' : 'text-primarytext'}`}>Brand name</label>
-                  {errors?.brandName && <p className="text-red-500">*{errors.brandName}</p>}
+                <div className="flex gap-2">
+                  <label className={`text-primarytext`}>Brand name</label>
+                  {errors?.brandName && (
+                    <p className="text-red-500">*{errors.brandName}</p>
+                  )}
                 </div>
                 <input
                   id="brandName"
@@ -134,9 +135,11 @@ function ProductForm({ productData, categories }) {
               </div>
 
               <div className="space-y-2 text-sm">
-                <div className="flex gap-4">
-                  <label className={`${errors?.productName ? 'text-red-500' : 'text-primarytext'}`}>Product name</label>
-                  {errors?.productName && <p className="text-red-500">*{errors.productName}</p>}
+                <div className="flex gap-2">
+                  <label className={`text-primarytext`}>Product name</label>
+                  {errors?.productName && (
+                    <p className="text-red-500">*{errors.productName}</p>
+                  )}
                 </div>
                 <input
                   type="text"
@@ -149,11 +152,12 @@ function ProductForm({ productData, categories }) {
                 />
               </div>
 
-
               <div className="space-y-2 text-sm">
-                <div className="flex gap-4">
-                  <label className={`${errors?.slug ? 'text-red-500' : 'text-primarytext'}`}>Slug</label>
-                  {errors?.slug && <p className="text-red-500">*{errors.slug}</p>}
+                <div className="flex gap-2">
+                  <label className={`text-primarytext`}>Slug</label>
+                  {errors?.slug && (
+                    <p className="text-red-500">*{errors.slug}</p>
+                  )}
                 </div>
                 <input
                   type="text"
@@ -189,16 +193,18 @@ function ProductForm({ productData, categories }) {
 
             <div className="space-y-3 px-3">
               <div className="space-y-2 text-sm">
-                <div className="flex gap-4">
-                  <label className={`${errors?.basePrice ? 'text-red-500' : 'text-primarytext'}`}>Base Price</label>
-                  {errors?.basePrice && <p className="text-red-500">*{errors.basePrice}</p>}
+                <div className="flex gap-2">
+                  <label className={`text-primarytext`}>Base Price</label>
+                  {errors?.basePrice && (
+                    <p className="text-red-500">*{errors.basePrice}</p>
+                  )}
                 </div>
                 <input
                   type="number"
                   name="basePrice"
                   id="basePrice"
-                  min="0"           // Prevents negative numbers in many browsers
-                  step="0.01"        // Allows two decimal places (cents)
+                  min="0" // Prevents negative numbers in many browsers
+                  step="0.01" // Allows two decimal places (cents)
                   value={formData?.basePrice}
                   onChange={handleChange}
                   placeholder="0.00"
@@ -220,9 +226,11 @@ function ProductForm({ productData, categories }) {
               </div>
 
               <div className="space-y-2 text-sm">
-                <div className="flex gap-4">
-                  <label className={`${errors?.category ? 'text-red-500' : 'text-primarytext'}`}>Category</label>
-                  {errors?.category && <p className="text-red-500">*{errors.category}</p>}
+                <div className="flex gap-2">
+                  <label className={`text-primarytext`}>Category</label>
+                  {errors?.category && (
+                    <p className="text-red-500">*{errors.category}</p>
+                  )}
                 </div>
                 <select
                   name="category"
@@ -267,6 +275,10 @@ function ProductForm({ productData, categories }) {
           properties={properties}
           setProperties={setProperties}
         />
+
+       <div className="border p-3 rounded-md">
+         <ChooseImageFiles files={files} setFiles={setFiles} />
+       </div>
 
         {/* Submit */}
         <div className="flex justify-end mt-4">

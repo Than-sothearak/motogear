@@ -9,27 +9,62 @@ import { auth } from "@/auth";
 await mongoDb();
 
 // Fetch products with pagination and search
-export async function getProducts(query, page) {
+export async function getProducts(query, page, status) {
+
+  let queryData = {}
+ if (status) {
+  queryData.status = status
+ }
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
   }
-
   const ITEM_PER_PAGE = 10;
-
   try {
     if (query) {
       const products = await Product.find({
         $or: [{ productName: { $regex: query, $options: "i" } }],
-      });
+      }).populate("category");
       const count = products.length;
       return { products, count };
     }
 
+  if (queryData) {
+       const products = await Product.find(queryData)
+      .sort({ createdAt: -1 })
+      .limit(ITEM_PER_PAGE)
+      .populate("category")
+      .skip(ITEM_PER_PAGE * (page - 1));
+ const count = products.length;
+    return { products, count };
+  }
+
+    //    if (sort) {
+    //   switch (sort) {
+    //     case "active":
+    //       sort = { createdAt: 1 };
+    //       break;
+    //     case "date-desc":
+    //       sort = { createdAt: -1 };
+    //       break;
+    //     case "status-asc":
+    //       sort = { status: 1 };
+    //       break;
+    //     case "status-desc":
+    //       sort = { status: -1 };
+    //       break;
+    //     case "one bed room":
+    //       sort = { status: -1 };
+    //       break;
+    //     default:
+    //       sort = { createdAt: -1 }; // fallback
+    //   }
+    // }
     const count = await Product.countDocuments();
     const products = await Product.find()
       .sort({ createdAt: -1 })
       .limit(ITEM_PER_PAGE)
+      .populate("category")
       .skip(ITEM_PER_PAGE * (page - 1));
 
     return { products, count };
@@ -71,10 +106,9 @@ export async function addProduct(prevState, formData) {
     // if (!category) errors.category = "Category is required";
     // if (!basePrice) errors.basePrice = "Base price is required";
 
-    console.log(errors)
+    console.log(errors);
     if (Object.keys(errors).length > 0) return { errors, success: false };
 
-  
     // Upload images to S3
     // let imageUrls = [];
     // for (const file of imagesFiles) {
@@ -85,20 +119,19 @@ export async function addProduct(prevState, formData) {
     // }
 
     // const variants = variantData ? JSON.parse(variantMetadata) : [];
-// let fileIndex = 0; // to track which file we're reading
+    // let fileIndex = 0; // to track which file we're reading
 
-for (const variant of variantMetadata) {
-  variant.images = [];
+    for (const variant of variantMetadata) {
+      variant.images = [];
 
-  for (let i = 0; i < variant.imageCount; i++) {
-    const file = variantFiles[fileIndex++]; // get the correct File object
-    if (file && file.size > 0) {
-      const url = await uploadFileToS3(file); // upload to S3
-      variant.images.push(url); // save S3 URL
+      for (let i = 0; i < variant.imageCount; i++) {
+        const file = variantFiles[fileIndex++]; // get the correct File object
+        if (file && file.size > 0) {
+          const url = await uploadFileToS3(file); // upload to S3
+          variant.images.push(url); // save S3 URL
+        }
+      }
     }
-  }
-}
-
 
     // for (const variant of variants) {
     //   if (variant.images && variant.images.length > 0) {
@@ -127,22 +160,22 @@ for (const variant of variantMetadata) {
     // await Product.create(productData);
 
     // revalidatePath("/dashboard/products/");
-
   } catch (err) {
     console.error("Error saving product:", err);
     if (err.code === 11000) {
-        // Get which field caused it
-        const field = Object.keys(err.keyPattern)[0]; // e.g., "slug"
-        const value = err.keyValue[field]; // e.g., "sds"
+      // Get which field caused it
+      const field = Object.keys(err.keyPattern)[0]; // e.g., "slug"
+      const value = err.keyValue[field]; // e.g., "sds"
 
-        return {
-            success: false,
-            errors: {
-                [field]: `${field} "${value}" already exists. Please choose another.`,
-            },
-        }
+      return {
+        success: false,
+        errors: {
+          [field]: `${field} "${value}" already exists. Please choose another.`,
+        },
+      };
+    }
   }
-}}
+}
 
 // Update existing product
 export async function updateProduct(productId, prevState, formData) {

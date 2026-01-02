@@ -49,7 +49,6 @@ const ProductSchema = new Schema(
 
     variants: {
       type: [VariantSchema],
-      validate: [v => v.length > 0, "Product must have at least one variant"],
     },
 
     status: {
