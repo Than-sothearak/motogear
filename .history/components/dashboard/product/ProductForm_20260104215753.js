@@ -8,7 +8,17 @@ import ChooseImageFiles from "../ChooseImageFiles";
 function ProductForm({ productData, categories }) {
   const router = useRouter();
   
+ const SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
 
+const COLORS = [
+  { name: "Red", hex: "#EF4444" },
+  { name: "Blue", hex: "#3B82F6" },
+  { name: "Black", hex: "#000000" },
+  { name: "White", hex: "#FFFFFF" },
+  { name: "Green", hex: "#10B981" },
+  { name: "Gray", hex: "#6B7280" },
+  { name: "Navy", hex: "#1E3A8A" }
+];
   // Main form state
   const [formData, setFormData] = useState({
     productName: productData?.productName || "",

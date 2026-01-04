@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { BiPlusCircle } from "react-icons/bi";
+import { BiChevronDown, BiPlusCircle } from "react-icons/bi";
 
 const VariantForm = ({ setVariants, setProperties, properties, variants,
 }) => {
@@ -138,39 +138,34 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
           >
             <BiPlusCircle size={22} /> <p>Add variant</p>
           </button>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm max-h-96 overflow-auto">
             {variants.map((variant, index) => (
               <div key={index} className="flex-col flex gap-4">
-                <div className="flex gap-2 max-sm:flex-wrap justify-end items-end">
-                <div className="w-full flex flex-col">
-                    <label>Size</label>
-                  <select
-                    name="variantSize[]"
-                    className="p-2 border rounded bg-white "
+                <div className="flex gap-2 max-sm:flex-wrap">
+                <div className="flex-1 space-y-2">
+        <label className="text-sm font-semibold text-slate-700 ml-1">
+          Select Size
+        </label>
+        <div className="relative group">
+          <select
+            name="variantSize[]"
+            className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block p-3 transition-all duration-200 outline-none cursor-pointer group-hover:bg-white"
+            required
+          >
+            <option value="" disabled selected>Size</option>
+            {SIZES.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400 group-hover:text-indigo-500 transition-colors">
+            <BiChevronDown size={20} />
+          </div>
+        </div>
+      </div>
+
+                  <input
                     required
-                    placeholder="Size"
-                    value={variant.size}
-                    onChange={(e) => {
-                      const newVariants = [...variants];
-                      newVariants[index].size = e.target.value;
-                      setVariants(newVariants);
-                    }}
-                  >
-
-                    <option value="">Size</option>
-                    {SIZES.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                  <div className="w-full flex flex-col">
-                    <label>Color</label>
-                    <select
-                    name="variantSize[]"
-                    className="p-2 border rounded bg-white w-full"
-
+                    className="p-2 border rounded-lg w-full"
                     placeholder="Color"
                     value={variant.color}
                     onChange={(e) => {
@@ -178,20 +173,8 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       newVariants[index].color = e.target.value;
                       setVariants(newVariants);
                     }}
-                  >
-
-                    <option value="">Color</option>
-                    {COLORS.map((c) => (
-                      <option key={c.name} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                  </div>
-
-                      <div className="flex flex-col w-full">
-                  <label>Stock</label>
-                    <input
+                  />
+                  <input
                     required
                     className="p-2 border rounded-lg w-full"
                     placeholder="Stock"
@@ -203,11 +186,7 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       setVariants(newVariants);
                     }}
                   />
-                </div>
-            
-                <div className="flex flex-col w-full">
-                  <label>Price USD</label>
-                    <input
+                  <input
                     required
                     className="p-2 border rounded-lg w-full"
                     placeholder="Price"
@@ -219,10 +198,7 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       setVariants(newVariants);
                     }}
                   />
-                </div>
-                <div>
-                  <label>SKU</label>
-                    <input
+                  <input
                     required
                     className="p-2 border rounded-lg"
                     placeholder="SKU"
@@ -233,19 +209,17 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       setVariants(newVariants);
                     }}
                   />
-                  
-                </div>
-                    <button
+                  <button
                     onClick={() => removeVariants(index)}
                     type="button"
-                    className="bg-red-500 text-white px-2 py-1 rounded-lg h-9"
+                    className="bg-red-500 text-white px-2 py-1 rounded-lg"
                   >
                     Remove
                   </button>
                 </div>
 
                 {/* Variant Images */}
-                <div className="border rounded-md py-4 w-80">
+                <div className="border rounded-md py-4">
                   <div className="block mb-2 font-bold border-b px-3 pb-2">
                     <h1>Variant Image</h1>
                   </div>

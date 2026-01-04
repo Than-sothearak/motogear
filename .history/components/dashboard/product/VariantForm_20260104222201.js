@@ -194,12 +194,12 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                     <input
                     required
                     className="p-2 border rounded-lg w-full"
-                    placeholder="Stock"
+                    placeholder="Price"
                     type="number"
                     value={variant.stock}
                     onChange={(e) => {
                       const newVariants = [...variants];
-                      newVariants[index].stock = Number(e.target.value);
+                      newVariants[index].price = Number(e.target.value);
                       setVariants(newVariants);
                     }}
                   />

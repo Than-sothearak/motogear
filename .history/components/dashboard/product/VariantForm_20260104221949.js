@@ -188,22 +188,6 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                     ))}
                   </select>
                   </div>
-
-                      <div className="flex flex-col w-full">
-                  <label>Stock</label>
-                    <input
-                    required
-                    className="p-2 border rounded-lg w-full"
-                    placeholder="Stock"
-                    type="number"
-                    value={variant.stock}
-                    onChange={(e) => {
-                      const newVariants = [...variants];
-                      newVariants[index].stock = Number(e.target.value);
-                      setVariants(newVariants);
-                    }}
-                  />
-                </div>
             
                 <div className="flex flex-col w-full">
                   <label>Price USD</label>

@@ -138,15 +138,14 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
           >
             <BiPlusCircle size={22} /> <p>Add variant</p>
           </button>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm max-h-96 overflow-auto">
             {variants.map((variant, index) => (
               <div key={index} className="flex-col flex gap-4">
-                <div className="flex gap-2 max-sm:flex-wrap justify-end items-end">
-                <div className="w-full flex flex-col">
-                    <label>Size</label>
+                <div className="flex gap-2 max-sm:flex-wrap">
+                  <label>Size</label>
                   <select
                     name="variantSize[]"
-                    className="p-2 border rounded bg-white "
+                    className="p-2 border rounded bg-white w-full"
                     required
                     placeholder="Size"
                     value={variant.size}
@@ -164,10 +163,7 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       </option>
                     ))}
                   </select>
-                </div>
-                  <div className="w-full flex flex-col">
-                    <label>Color</label>
-                    <select
+                  <select
                     name="variantSize[]"
                     className="p-2 border rounded bg-white w-full"
 
@@ -187,11 +183,8 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       </option>
                     ))}
                   </select>
-                  </div>
-
-                      <div className="flex flex-col w-full">
-                  <label>Stock</label>
-                    <input
+            
+                  <input
                     required
                     className="p-2 border rounded-lg w-full"
                     placeholder="Stock"
@@ -203,11 +196,7 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       setVariants(newVariants);
                     }}
                   />
-                </div>
-            
-                <div className="flex flex-col w-full">
-                  <label>Price USD</label>
-                    <input
+                  <input
                     required
                     className="p-2 border rounded-lg w-full"
                     placeholder="Price"
@@ -219,10 +208,7 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       setVariants(newVariants);
                     }}
                   />
-                </div>
-                <div>
-                  <label>SKU</label>
-                    <input
+                  <input
                     required
                     className="p-2 border rounded-lg"
                     placeholder="SKU"
@@ -233,19 +219,17 @@ const VariantForm = ({ setVariants, setProperties, properties, variants,
                       setVariants(newVariants);
                     }}
                   />
-                  
-                </div>
-                    <button
+                  <button
                     onClick={() => removeVariants(index)}
                     type="button"
-                    className="bg-red-500 text-white px-2 py-1 rounded-lg h-9"
+                    className="bg-red-500 text-white px-2 py-1 rounded-lg"
                   >
                     Remove
                   </button>
                 </div>
 
                 {/* Variant Images */}
-                <div className="border rounded-md py-4 w-80">
+                <div className="border rounded-md py-4">
                   <div className="block mb-2 font-bold border-b px-3 pb-2">
                     <h1>Variant Image</h1>
                   </div>

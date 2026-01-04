@@ -68,6 +68,8 @@ export async function POST(req) {
       console.log(err);
     }
 
+    console.log(images);
+
     // -----------------------
     // 4. Save to MongoDB
 

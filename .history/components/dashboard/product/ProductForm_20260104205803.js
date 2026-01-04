@@ -7,7 +7,6 @@ import ChooseImageFiles from "../ChooseImageFiles";
 
 function ProductForm({ productData, categories }) {
   const router = useRouter();
-  
 
   // Main form state
   const [formData, setFormData] = useState({
