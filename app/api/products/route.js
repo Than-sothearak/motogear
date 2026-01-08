@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { mongoDb } from "@/utils/connectDB";
 import { auth } from "@/auth";
-import { uploadFileToS3 } from "@/utils/uploadImageFileToS3";
+import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { validateProduct } from "@/lib/validateData";
 import { Product } from "@/models/Product";
 
@@ -38,6 +38,7 @@ export async function POST(req) {
       return { ...v, image: file }; // File object here
     });
 
+
     const errors = validateProduct(payload);
 
     if (!errors.success) {
@@ -46,14 +47,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-
-    // -----------------------
-    // 3. Access files
-    // -----------------------
-    for (const variant of variantsWithFiles) {
-        const url = await uploadFileToS3(variant.image); // or Cloudinary
-        variant.images = url
-    }
+  
     let images = [];
     try {
       if (imageFiles) {
@@ -68,14 +62,24 @@ export async function POST(req) {
       console.log(err);
     }
 
+    for (const variant of variantsWithFiles) {
+      if (variant.image.size > 0) {
+        const url = await uploadFileToS3(variant.image); // or Cloudinary
+        variant.images = url;
+      }
+    }
+
     // -----------------------
     // 4. Save to MongoDB
-
-    await Product.create({
-      ...payload,
-      variants: variantsWithFiles,
-      imageUrls: images,
-    });
+    try {
+      await Product.create({
+        ...payload,
+        variants: variantsWithFiles,
+        imageUrls: images,
+      });
+    } catch (err) {
+      return NextResponse.json(err);
+    }
     return NextResponse.json({
       success: true,
       message: "Your product created",
@@ -101,3 +105,4 @@ export async function POST(req) {
     );
   }
 }
+

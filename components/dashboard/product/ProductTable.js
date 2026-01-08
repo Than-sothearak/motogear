@@ -63,7 +63,7 @@ function ProductRow() {
 
       <td className="px-5 py-4 text-right">
         <Link
-          href="/dashboard/products/edit/1"
+          href={`/dashboard/products/${item._id}`}
           className="text-sm text-blue-600 hover:underline"
         >
           Edit

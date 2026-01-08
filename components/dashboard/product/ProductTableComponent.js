@@ -1,4 +1,3 @@
-import SearchCompoenent from '@/components/SearchComponent';
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
@@ -43,7 +42,7 @@ const ProductTableComponent = ({ pageName, products }) => {
                 {/* Action Buttons */}
                 <div className="flex justify-between mt-4">
                   <Link
-                    href={`/dashboard/${pageName}/edit/${product._id}`}
+                    href={`/dashboard/${pageName}/${product._id}`}
                     className="text-sm px-3 py-1 rounded-md bg-primary text-tertiary hover:bg-secondary hover:text-tertiary transition-colors duration-200"
                   >
                     Edit

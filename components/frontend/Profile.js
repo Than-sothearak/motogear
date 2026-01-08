@@ -22,13 +22,15 @@ const Profile = ({ session }) => {
       >
         {session?.user ? (
           <div className="p-4 w-full" >
-            <div className='flex gap-4 w-full justify-center items-center'>
-              <div className=''>
+            <Link 
+            href={`/dashboard`}
+            className='flex gap-4 w-full border justify-center items-center p-2 rounded-sm hover:bg-tertiary/10 '>
+            
                 <p className="font-semibold text-gray-800">{session.user.username}</p>
              
-              </div>
+          
               <Image src={session.user.imageUrl} height={40} width={40} alt='profile' className='rounded-full' />
-            </div>
+            </Link>
             <button
               onClick={handleSignOut}
               className="mt-3 w-full  py-2 rounded-sm transition border hover:bg-tertiary hover:text-primary">

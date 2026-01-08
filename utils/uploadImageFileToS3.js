@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import sharp from "sharp";
 
 const s3Client = new S3Client({
@@ -15,7 +19,9 @@ export async function uploadFileToS3(file) {
     const fileType = file.type;
 
     // Convert file to Buffer
-    const fileBuffer = Buffer.isBuffer(file) ? file : Buffer.from(await file.arrayBuffer());
+    const fileBuffer = Buffer.isBuffer(file)
+      ? file
+      : Buffer.from(await file.arrayBuffer());
 
     let uploadBuffer = fileBuffer;
     let contentType = fileType || "application/octet-stream";
@@ -30,11 +36,13 @@ export async function uploadFileToS3(file) {
       // Ensure under 500KB
       while (uploadBuffer.length > 500 * 1024) {
         uploadBuffer = await sharp(uploadBuffer)
-          .jpeg({ quality: Math.max(10, Math.floor((uploadBuffer.length / 500) * 80)) })
+          .jpeg({
+            quality: Math.max(10, Math.floor((uploadBuffer.length / 500) * 80)),
+          })
           .toBuffer();
       }
       contentType = "image/jpeg";
-      console.log('Image has been coverted under 500KB')
+      console.log("Image has been coverted under 500KB");
     }
 
     const params = {
@@ -57,19 +65,18 @@ export async function uploadFileToS3(file) {
 // Helper function to delete file from S3
 export async function deleteFileFromS3(file) {
   try {
-    console.log(`File deleted successfully from S3: uploads/${file}`);
-    
     if (!file) {
       throw new Error("File key is required for deletion");
     }
 
     await s3Client.send(
       new DeleteObjectCommand({
-        Bucket: process.env.NEXT_S3_BUCKET,
+        Bucket: process.env.S3_BUCKET_NAME,
         Key: `${file}`,
       })
     );
 
+    console.log(`File deleted successfully from S3: uploads/${file}`);
   } catch (error) {
     console.error("S3 Delete Error:", error);
     throw new Error("Failed to delete file from S3");

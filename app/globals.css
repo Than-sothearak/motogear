@@ -35,3 +35,18 @@ a {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+/* globals.css */
+.ProseMirror {
+  min-height: 150px;
+  outline: none;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+.ProseMirror ul {
+  padding-left: 1.25rem;
+}
+

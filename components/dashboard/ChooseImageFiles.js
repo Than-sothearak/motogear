@@ -43,8 +43,8 @@ export default function ChooseImageFiles({ files, setFiles }) {
   };
 
   return (
-    <div className="">
-      <label className="font-bold text-md">Product Image</label>
+    <div className="mt-10">
+       <label className="font-bold text-md">Image upload</label>
       <div className="flex flex-col-reverse h-full items-center justify-start gap-4">
         {/* Upload Area */}
         <div className="w-full h-full flex justify-center items-center gap-8 flex-col border-dashed border-secondary mt-2 rounded-md border-2 p-8">
