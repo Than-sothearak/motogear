@@ -49,13 +49,13 @@ const Navbar = ({session, categories}) => {
   }
 
     return (
-        <header className="top-0 z-50 sticky w-full border-b bg-primary max-lg:p-2">
+        <header className="top-0 z-40 sticky w-full border-b bg-primary max-lg:p-2">
             <div className="container mx-auto font-semibold">
                 <div className="flex items-center justify-between max-lg:flex-col">
                    {/* LOGO */}
                     <Link
                     href={`/`}
-                    className="text-2xl font-black tracking-wide italic">
+                    className="text-2xl font-black">
                         MOTO<span className="text-green-500">SHOP</span>
                     </Link>
                     {/* LEFT MENU */}
@@ -97,7 +97,7 @@ const Navbar = ({session, categories}) => {
 
                     {/* SEARCH */}
                     <div className="flex items-center space-x-4 max:md-order-2 max-lg:w-full">
-                           <MobileNavbar  handleClick={handleClick} isOpen={isOpen} menuData={menuData}/>
+                           <MobileNavbar  handleClick={handleClick} isOpen={isOpen} menuData={categories}/>
                         <div className="max-lg:order-2 w-full">
                             <input
                                 type="text"

@@ -1,12 +1,12 @@
-"use client"
-import ProductBox from '@/components/frontend/ProductBox'
-import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React from 'react'
+"use client";
+import ProductBox from "@/components/frontend/ProductBox";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
+import ProductCard from "./ProductCard";
+import ProductSlideCard from "./ProductSlideCard";
 
-
-const ProductsPage = ({ slug, categories, products }) => {
-
+const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
   const searchParams = useSearchParams();
   const current = new URLSearchParams(searchParams.toString());
   const router = useRouter();
@@ -16,59 +16,79 @@ const ProductsPage = ({ slug, categories, products }) => {
     router.push(`?${current.toString().toLowerCase()}`);
   };
 
-
   return (
-    <div className='w-full bg-primary mx-auto h-full flex gap-10 flex-col'>
-      <div className='container mx-auto mt-10 space-y-10 bg-primary px-2'>
-        <div className='flex justify-between items-center max-md:flex-wrap gap-4'>
-          <h1 className='font-bold text-3xl uppercase'>All {slug}</h1>
-          <div className='flex gap-4 items-center max-md:flex-wrap max-md:gap-1 justify-center'>
-
-            <Link href={`/categories/${slug}`} className='hover:underline'>All</Link>
-            <div className='text-tertiary/50'>|</div>
-            {categories.map(cat => (
+    <div className="w-full bg-primary mx-auto h-full flex gap-10 flex-col min-h-screen">
+      <div className="container mx-auto mt-10 space-y-10 bg-primary px-2">
+        <div className="flex justify-between items-center max-md:flex-col gap-4 max-md:justify-center">
+          <div className="flex justify-center">
+            <Link
+              href={`/products`}
+              className="font-bold text-3xl uppercase hover:underline"
+            >
+              All product
+            </Link>
+          </div>
+          <div className="flex gap-2 items-end max-md:flex-wrap max-md:gap-1 justify-center">
+            {slug ? (
+              <Link href={`${slug}`} className="font-bold text-3xl uppercase">
+                {slug}
+              </Link>
+            ) : (
+              <Link
+                href={`${slug}`}
+                className="font-bold text-3xl uppercase"
+              ></Link>
+            )}
+            <Link href={`/categories/${slug}`} className="hover:underline">
+              All
+            </Link>
+            {categories.length !== 0 && 
+            <div className="text-tertiary/50 border h-6"></div>}
+            {categories.map((cat, index) => (
               <div key={cat._id} className="flex gap-2">
-                <Link
-                  href={
-                    !cat.parentCategory // <-- check if it’s a parent
-                      ? `/categories/${cat.slug}`        // parent link
-                      :
-                      `/categories/find?cat=${cat.slug}` // child link without current slug
-
-
-                  }
-                  className="hover:underline whitespace-nowrap"
-                >
-                  {cat.name}
-                </Link>
-                <div className="text-tertiary/50">|</div>
+                {slug ? (
+                  <Link
+                    href={`/categories/${slug}/?cat=${cat.slug}`}
+                    className="hover:underline whitespace-nowrap"
+                  >
+                    {cat.name}
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/categories/${cat.slug}`}
+                    className="hover:underline whitespace-nowrap"
+                  >
+                    {cat.name}
+                  </Link>
+                )}
+                {categories.length - 1 !== index && 
+                <div className="text-tertiary/50 border h-6">{cat.length}</div>
+                } 
               </div>
             ))}
-            {/* <select   onChange={handleChangeSort}>
-              {categories?.map(cat => (
-                <option key={cat._id} value={cat.slug}>
-                  {cat.name}
-                </option>
-              ))}
-            </select> */}
-
           </div>
         </div>
+        {groupedProducts &&
+          groupedProducts.map((category, index) => (
+            <ProductSlideCard key={category._id} category={category} />
+          ))}
 
-        {products.length > 0 ?
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-8 space-y-4">
-            {products.map((item, index) => (
-              <div key={item._id} className='p-4 space-y-10'>
-                <ProductBox {...item} />
-              </div>
-            ))}
-          </div> : <div className='w-full  space-y-4"'>
-            No product
-          </div>
-        }
+        <div>
+          {products.length > 0 ? (
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-4">
+              {products.map((item, index) => (
+                <div key={item._id} className="">
+                  <ProductBox {...item} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className='w-full  space-y-4"'>No product</div>
+          )}
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductsPage
+export default ProductsPage;

@@ -3,67 +3,128 @@ import { Product } from "@/models/Product";
 import { mongoDb } from "@/utils/connectDB";
 import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { auth } from "@/auth";
-import { getAllCategoryBySlug } from "./categories";
+import { getCategories } from "./categories";
 import { Category } from "@/models/Category";
+
+export async function getProductsGroupedByParent(limit = 7) {
+  const result = await Product.aggregate([
+    // Join with category to get parent info
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    { $unwind: "$category" },
+
+    // Only include parent categories
+    {
+      $match: {
+        "category.parentCategory": null,
+      },
+    },
+
+    // Sort products newest first
+    { $sort: { createdAt: -1 } },
+
+    // Group by category
+    {
+      $group: {
+        _id: "$category._id",
+        name: { $first: "$category.name" },
+        slug: { $first: "$category.slug" },
+        products: { $push: "$$ROOT" },
+      },
+    },
+
+    // Limit products array to N per category
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        slug: 1,
+        products: { $slice: ["$products", limit] },
+      },
+    },
+  ]);
+
+  return result;
+}
 
 export async function getProductFilter(slug, catParams) {
   try {
     const parentSlug = slug?.[0] || null;
-    let categoryIds
-    const selectedCatSlug = catParams?.cat
+    let categoryIds;
+    const selectedCatSlug = catParams?.cat;
 
-    console.log(selectedCatSlug)
+    // 1️⃣ Filter by selected category (child)
     if (selectedCatSlug) {
-      const catIds = await Category.findOne({ slug: selectedCatSlug })
-
+      const parent = await Category.findOne({ slug: parentSlug }).lean();
+      if (!parent) return { products: [] };
+      const categories = await Category.find({
+        parentCategory: parent._id,
+      });
+      const category = await Category.findOne({ slug: selectedCatSlug });
+      console.log("// 1️⃣ Filter by selected category (child)");
       const products = await Product.find({
-        category: { $in: catIds._id }
+        category: category._id,
       })
-        .select('productName basePrice slug imageUrls category brandName')
-        .populate('category', 'category slug')
+        .select("productName basePrice slug imageUrls category brandName")
+        .populate("category", "category slug")
         .sort({ createdAt: -1 })
-        .lean()
-      return { products }
-    } else {
-      const parent = await Category.findOne({ slug: parentSlug })
-      if (!parent) {
-        const products = await Product.find()
-          .select('productName basePrice slug imageUrls category brandName')
-          .populate('category', 'category slug')
-          .sort({ createdAt: -1 })
-          .lean()
-        return { products }
-      }
-
-
-      const childCategories = await Category.find({ parentCategory: parent._id }).select('_id')
-      categoryIds = [parent._id, ...childCategories.map(c => c._id)]
+        .lean();
+      return { products, categories };
     }
-    const products = await Product.find({
-      category: { $in: categoryIds }
-    })
-      .select('productName basePrice slug imageUrls category brandName')
-      .populate('category', 'category slug')
-      .sort({ createdAt: -1 })
+
+    // 2️⃣ Filter by parent category + children
+    if (parentSlug) {
+      console.log("// 2️⃣ Filter by parent category + children");
+
+      const parent = await Category.findOne({ slug: parentSlug }).lean();
+      if (!parent) return { products: [] };
+      const categories = await Category.find({
+        parentCategory: parent._id,
+      });
+      categoryIds = [parent._id, ...categories.map((c) => c._id)];
+      const products = await Product.find({
+        category: { $in: categoryIds },
+      })
+        .select("productName basePrice slug imageUrls category brandName")
+        .populate("category", "category slug")
+        .sort({ createdAt: -1 })
+        .lean();
+
+      return { products, categories };
+    }
+
+    // 3️⃣ No filter → get all products
+
+    const categories = await getCategories();
+    const products = await Product.find()
+      .populate({
+        path: "category",
+        select: "name slug parentCategory",
+        populate: {
+          path: "parentCategory",
+          select: "name slug",
+        },
+      })
       .lean()
-
-
-
-
-
-    return { products }
+    console.log("No filter → get all products");
+    return { products, categories };
   } catch (err) {
     console.error(err);
     throw new Error("Failed to fetch products!");
   }
-
 }
 // Fetch products with pagination and search
 export async function getProducts(query, page, status, category) {
   await mongoDb();
-  let queryData = {}
-  if (category) {
-    queryData.category = category
+  let queryData = {};
+  if (status) {
+    queryData.status = status;
   }
   const ITEM_PER_PAGE = 10;
 
@@ -71,8 +132,7 @@ export async function getProducts(query, page, status, category) {
     if (query) {
       const products = await Product.find({
         $or: [{ productName: { $regex: query, $options: "i" } }],
-      })
-        .populate("category");
+      }).populate("category");
       const count = products.length;
       return { products, count };
     }

@@ -29,7 +29,7 @@ const HeroVideo = () => {
           <p className="text-lg md:text-xl text-gray-200 mb-8">
             Premium Off-Road Motorcycle Gear
           </p>
-          <Link href={`/products`} className="bg-tertiary hover:bg-tertiary/80 px-4 py-1 rounded-full text-2xl text-primary font-semibold uppercase">
+          <Link href={`/products`} className="bg-tertiary hover:bg-tertiary/0 px-4 py-1 rounded-full text-2xl text-primary font-semibold uppercase">
             Shop Now
           </Link>
         </div>

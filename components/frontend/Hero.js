@@ -2,6 +2,7 @@
 
 import { myFont } from "@/lib/myFont";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const slides = [
@@ -60,9 +61,9 @@ const Hero = () => {
       <p className="text-lg md:text-xl text-primarytext mb-8 relative z-20">
       {slides[0].subtitle}
     </p>
-    <button className="bg-tertiary hover:bg-tertiary/80 px-4 py-1 rounded-full text-2xl text-primary font-semibold uppercase hover:cursor-pointer relative z-20">
+    <Link href={`/categories/motobike`} className="bg-tertiary hover:bg-tertiary/80 px-4 py-1 rounded-full text-2xl text-primary font-semibold uppercase hover:cursor-pointer relative z-20">
       Shop Now
-    </button>
+    </Link>
   </div>
   </div>
 </div>

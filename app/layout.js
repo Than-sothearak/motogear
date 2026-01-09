@@ -6,6 +6,7 @@ import { Geist } from 'next/font/google'
 import Navbar from "@/components/frontend/Navbar";
 import { auth } from "@/auth";
 import { getCategories } from "@/actions/categories";
+import Footer from "@/components/frontend/Footer";
 
 
 const playfair = Playfair({
@@ -76,6 +77,7 @@ const categories = await getCategories();
       >
           <Navbar session={session} categories={JSON.parse(JSON.stringify(menuData))}/>
         {children}
+        <Footer session={session} />
       </body>
     </html>
 

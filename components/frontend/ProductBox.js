@@ -3,9 +3,9 @@ import React from 'react'
 
 const ProductBox = ({productName, basePrice, brandName, imageUrls, }) => {
   return (
-    <div>
-          <div className="w-full h-56 rounded-sm hover:scale-110 transition-all duration-300 scale-100">
-       <div className='relative h-56 bg-white overflow-hidden '>
+    <div className='border rounded-sm'>
+          <div className="p-2 w-full h-56 rounded-sm hover:scale-105 transition-all duration-300 scale-100">
+       <div className='relative h-48 bg-white overflow-hidden '>
          <Image
           src={imageUrls[0] || "https://images.unsplash.com/photo-1633783714421-332b7f929148?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bm8lMjBpbWFnZXxlbnwwfHwwfHx8MA%3D%3D"}
           fill

@@ -1,4 +1,5 @@
 "use client"
+import Link from 'next/link'
 import React from 'react'
 import { CiMenuBurger } from 'react-icons/ci'
 import { RiCloseLargeLine } from 'react-icons/ri'
@@ -19,22 +20,23 @@ const MobileNavbar = ({ handleClick, isOpen,menuData }) => {
           <div className='space-y-8'>
             {Object.keys(menuData).map(item => (
               <div key={item}>
-               <h2 className='text-3xl font-bold'> {item}</h2>
-
+           
+<Link   onClick={handleClick} className='text-3xl font-bold' href={`/categories/${item.toLowerCase()}`}>{item}</Link>
                 <div className="mt-4">
                   <ul className="flex flex-wrap gap-4">
                   
-                    {menuData[item].map(({ name, icon: Icon }) => (
+                    {menuData[item].map(({ name,slug }) => (
                         
-                      <li
+                      <Link
                       onClick={handleClick}
                         key={name}
+                          href={`/categories/${item.toLowerCase()}?cat=${slug}`}
                         className="flex items-center gap-3 p-4 cursor-pointer hover:bg-tertiary/80
                           hover:text-primary  transition text-primarytext"
                       >
-                        <Icon size={25} className="" />
+                     
                         <span>{name}</span>
-                      </li>
+                      </Link>
                     ))}
                   </ul>
                 </div>

@@ -10,8 +10,7 @@ const oneCatPage = async ({ params, searchParams }) => {
 
   const { query } = await searchParams;
 
-  const { products,} = await getProductFilter(slug, catParams, query);
-  const categories = await getCategories();
+  const { products, categories} = await getProductFilter(slug, catParams, query);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ProductsPage
@@ -25,42 +24,3 @@ const oneCatPage = async ({ params, searchParams }) => {
 }
 
 export default oneCatPage
-
-
-// const parentSlug = slug[0]
-//   const selectedCatSlug = sp?.cat || 'all'
-
-//   const { parent, childCategories } =
-//     await getAllCategoryBySlug(parentSlug)
-
-//   if (!parent) {
-//     return <div>Category not found</div>
-//   }
-
-//   let categoryIds = []
-
-//   if (selectedCatSlug === 'all') {
-//     // 🔹 Parent + all children
-//     categoryIds = [
-//       parent._id,
-//       ...childCategories.map(c => c._id),
-//     ]
-//   } else {
-//     // 🔹 Convert slug → ObjectId
-//     const selectedCategory = await Category.findOne({
-//       slug: selectedCatSlug,
-//     }).select('_id')
-
-//     if (!selectedCategory) {
-//       return <div>Category not found</div>
-//     }
-
-//     categoryIds = [selectedCategory._id]
-//   }
-
-//   const products = await Product.find({
-//     category: { $in: categoryIds },
-//   })
-//     .populate('category')
-//     .sort({ createdAt: -1 })
-//     .lean()
