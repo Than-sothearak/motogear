@@ -46,6 +46,7 @@
     "recharts": "^2.15.1",
     "sharp": "^0.34.1",
     "ua-parser-js": "^2.0.4",
+    "use-debounce": "^10.1.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

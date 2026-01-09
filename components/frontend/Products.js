@@ -2,8 +2,7 @@
 import ProductBox from "@/components/frontend/ProductBox";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
-import ProductCard from "./ProductCard";
+import React, { useState } from "react";
 import ProductSlideCard from "./ProductSlideCard";
 
 const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
@@ -11,9 +10,24 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
   const current = new URLSearchParams(searchParams.toString());
   const router = useRouter();
 
-  const handleChangeSort = (e) => {
-    current.set("cat", e.target.value);
-    router.push(`?${current.toString().toLowerCase()}`);
+  const [limit, setLimit] = useState(searchParams.get("limit") || "10");
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setLimit(value);
+
+    // Update URL param ?limit=VALUE
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value) {
+      params.set("limit", value);
+    } else {
+      params.delete("limit");
+    }
+
+    router.replace(`${window.location.pathname}?${params.toString()}`, {
+      scroll: false,
+    });
   };
 
   return (
@@ -39,11 +53,16 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
                 className="font-bold text-3xl uppercase"
               ></Link>
             )}
-            <Link href={`/categories/${slug}`} className="hover:underline">
+
+            {slug ? ( <Link href={`/categories/${slug}`} className="hover:underline">
               All
-            </Link>
-            {categories.length !== 0 && 
-            <div className="text-tertiary/50 border h-6"></div>}
+            </Link>) : ( <Link href={`/categories`} className="hover:underline">
+              All
+            </Link>)}
+       
+           
+            {categories.length !== 0 &&
+              <div className="text-tertiary/50 border h-6"></div>}
             {categories.map((cat, index) => (
               <div key={cat._id} className="flex gap-2">
                 {slug ? (
@@ -61,18 +80,24 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
                     {cat.name}
                   </Link>
                 )}
-                {categories.length - 1 !== index && 
-                <div className="text-tertiary/50 border h-6">{cat.length}</div>
-                } 
+                {categories.length - 1 !== index &&
+                  <div className="text-tertiary/50 border h-6">{cat.length}</div>
+                }
               </div>
             ))}
+
+                 <div className="flex items-end gap-2 ml-6">
+              <label>Limit</label>
+              <select value={limit} onChange={handleChange} className="border px-2">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
           </div>
         </div>
-        {groupedProducts &&
-          groupedProducts.map((category, index) => (
-            <ProductSlideCard key={category._id} category={category} />
-          ))}
-
+  
         <div>
           {products.length > 0 ? (
             <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-4">

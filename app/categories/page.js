@@ -1,30 +1,22 @@
-import ProductBox from '@/components/frontend/ProductBox'
-import { Product } from '@/models/Product'
+import { getProductsGroupedByParent } from '@/actions/products'
+import ProductSlideCard from '@/components/frontend/ProductSlideCard'
 import React from 'react'
-
-
 
 const categoriesPage = async () => {
 
-  const products = JSON.parse(JSON.stringify(await Product.find({ })
-    .populate("category")
-    .sort({ createdAt: -1 })
-    .lean()))
-
+    const groupedProducts = JSON.parse(JSON.stringify(await getProductsGroupedByParent()))
   return (
     <div className='w-full bg-primary mx-auto h-full flex gap-10 flex-col'>
       <div className='container mx-auto mt-10 space-y-10 bg-primary px-2'>
         <div>
-          <h1 className='font-bold text-3xl uppercase'>All Products</h1>
+          <h1 className='font-bold text-3xl uppercase'>All Categories</h1>
         </div>
 
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-8 space-y-4">
-          {products.map((item, index) => (
-          <div key={item._id} className='p-4 space-y-10'>
-            <ProductBox {...item}/>
-          </div>
+           {groupedProducts &&
+          groupedProducts.map((category, index) => (
+            <ProductSlideCard key={category._id} category={category} />
           ))}
-        </div>
+
       </div>
     </div>
   )

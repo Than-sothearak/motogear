@@ -19,12 +19,12 @@ const Pagination = ({ pathname, totalPages, currentPage, query }) => {
       {pageNum > 1 ? (
         <Link
           href={getHref(pageNum - 1)}
-          className={` bg-primary text-primarytext px-4 py-1 rounded-md hover:bg-primary hover:text-primarytext`}
+          className={` bg-primary border text-primarytext px-4 py-1 rounded-md hover:bg-primary hover:text-primarytext`}
         >
           Prev
         </Link>
       ) : (
-        <div className="bg-primary opacity-15 cursor-not-allowed px-4 py-1 rounded-md hover:bg-primary hover:text-primarytext">
+        <div className="bg-primary opacity-30 border cursor-not-allowed px-4 py-1 rounded-md hover:bg-primary hover:text-primarytext">
           Prev
         </div>
       )}
@@ -37,9 +37,9 @@ const Pagination = ({ pathname, totalPages, currentPage, query }) => {
             <Link
               key={page}
               href={getHref(page)}
-              className={`px-3 py-1 rounded-md ${
+              className={`px-3 py-1 rounded-md border ${
                 page === pageNum
-                  ? "bg-tertiary text-primarytext"
+                  ? "bg-tertiary text-primary"
                   : "bg-primary text-primarytext hover:bg-primary"
               }`}
             >
@@ -52,12 +52,12 @@ const Pagination = ({ pathname, totalPages, currentPage, query }) => {
       {pageNum < totalPages ? (
         <Link
           href={getHref(pageNum + 1)}
-          className={` bg-primary text-primarytext px-4 py-1 rounded-md hover:bg-primary hover:text-primarytext`}
+          className={` bg-primary border text-primarytext px-4 py-1 rounded-md hover:bg-primary hover:text-primarytext`}
         >
           Next
         </Link>
       ) : (
-        <div className="bg-primary text-primarytext opacity-15 cursor-not-allowed px-4 py-1 rounded-md">
+        <div className="bg-primary border text-primarytext opacity-30 cursor-not-allowed px-4 py-1 rounded-md">
           Next
         </div>
       )}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import Pagination from "@/components/Pagination";
 
 export default function ProductTable({products}) {
 
@@ -47,7 +48,7 @@ function ProductRow() {
         </div>
         <div>
           <p className="font-medium text-gray-800 max-w-60 overflow-hidden whitespace-nowrap">{item?.productName}</p>
-          <p className="text-xs text-gray-400">{item?.brandName}</p>
+          <p className="text-xs text-gray-400">{item?.slug}</p>
         </div>
       </td>
 
@@ -114,6 +115,7 @@ function ProductRow() {
             <ProductRow />: <div>No Data</div>}
           </tbody>
         </table>
+
       </div>
     </div>
   );

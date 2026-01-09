@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import ProductBox from './ProductBox'
 
-const ProductCard = ({ productName, basePrice, brandName, imageUrls, _id }) => {
+const ProductCard = ({ productName, basePrice, brandName, imageUrls, _id, slug }) => {
 
   return (
     <div
@@ -14,6 +14,7 @@ const ProductCard = ({ productName, basePrice, brandName, imageUrls, _id }) => {
         basePrice={basePrice}
         brandName={brandName}
         imageUrls={imageUrls}
+        slug={slug}
 
       />
 

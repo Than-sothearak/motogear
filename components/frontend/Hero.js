@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 const slides = [
   {
-    image: "/images/m-11.png",
+    image: "/images/m-12.png",
     title: "Conquer Every Terrain",
     subtitle: "Premium Off-Road Motorcycle Gear",
   },
@@ -17,7 +17,7 @@ const slides = [
     subtitle: "Built for Adventure & Dirt Trails",
   },
   {
-    image: "/images/m-11.png",
+    image: "/images/m-12.png",
     title: "Born for Off-Road",
     subtitle: "Gear Up. Ride Hard.",
   },
@@ -84,7 +84,7 @@ const Hero = () => {
         className="z-10 object-scale-down object-center"
         priority={i === 0}
       />
-      {/* <div className="absolute inset-0 bg-black/50 z-20" /> */}
+
     </div>
   ))}
 </div>

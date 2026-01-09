@@ -15,6 +15,7 @@ import MobileNavbar from "./MobileNavbar";
 import Profile from "./Profile";
 import Cart from "./Cart";
 import Link from "next/link";
+import Search from "./Search";
 
 const menuData = {
     Helmets: [
@@ -50,7 +51,7 @@ const Navbar = ({session, categories}) => {
 
     return (
         <header className="top-0 z-40 sticky w-full border-b bg-primary max-lg:p-2">
-            <div className="container mx-auto font-semibold">
+            <div className="lg:container w-full mx-auto font-semibold">
                 <div className="flex items-center justify-between max-lg:flex-col">
                    {/* LOGO */}
                     <Link
@@ -98,14 +99,7 @@ const Navbar = ({session, categories}) => {
                     {/* SEARCH */}
                     <div className="flex items-center space-x-4 max:md-order-2 max-lg:w-full">
                            <MobileNavbar  handleClick={handleClick} isOpen={isOpen} menuData={categories}/>
-                        <div className="max-lg:order-2 w-full">
-                            <input
-                                type="text"
-                                placeholder="Search products..."
-                                className="border px-4 py-2 text-sm w-full
-              focus:outline-none focus:ring-2 focus:ring-black"
-                            />
-                        </div>
+                      <Search />
 
                         {/* Account */}
                         <div className="flex items-center space-x-2 max-lg:order-3">

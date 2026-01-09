@@ -12,7 +12,7 @@ const MobileNavbar = ({ handleClick, isOpen,menuData }) => {
     <div className='lg:hidden order-2'> <button
       onClick={handleClick}
     ><CiMenuBurger size={24} /></button>
-      <div className={`bg-primary text-primarytext w-full h-full overflow-y-auto transition-all duration-500 ease-in-out  ${isOpen ? "translate-x-0" : "-translate-x-full"}
+      <div className={`bg-primary text-primarytext sm:w-1/2 w-full h-full overflow-y-auto transition-all duration-500 ease-in-out  ${isOpen ? "translate-x-0" : "-translate-x-full"}
         max-lg:fixed top-0 left-0 z-50
         `}>
         <div className='p-4 flex flex-col justify-end items-end'>
@@ -45,6 +45,9 @@ const MobileNavbar = ({ handleClick, isOpen,menuData }) => {
           </div>
         </div>
       </div>
+      <div
+            onClick={handleClick} 
+            className={`${isOpen ? 'fixed inset-0 bg-black bg-opacity-50 z-20' : ''}`}></div>
     </div>
   )
 }
