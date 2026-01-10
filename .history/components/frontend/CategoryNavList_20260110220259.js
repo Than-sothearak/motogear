@@ -1,0 +1,69 @@
+import { getCategories } from '@/actions/categories';
+import { auth } from '@/auth';
+import Link from 'next/link'
+import React from 'react'
+
+const CategoryNavList = async () => {
+
+      const session = await auth();
+  if (!session) {
+  }
+  const categories = await getCategories();
+  const menuData = {};
+  categories.forEach((cat) => {
+    if (!cat.parentCategory) {
+      //Find all Parent category
+      menuData[cat.name] = [];
+    }
+  });
+
+  categories.forEach((cat) => {
+    if (cat.parentCategory) {
+      // Find parent name
+      const parent = categories.find((p) => p._id.toString() === cat.parentCategory.toString());
+      if (parent) {
+        menuData[parent.name].push({
+          name: cat.name,
+          slug: cat.slug,
+        });
+      }
+    }
+  });
+  return (
+      <nav className="flex gap-8 h-full max-lg:hidden max-lg:order-3">
+                        {Object.keys(categories).map((item) => (
+                            <div
+                                key={item}
+                                className="uppercase h-14 flex items-center hover:border-b-black hover:border-b  hover:cursor-pointer"
+                                onMouseEnter={() => setActiveMenu(item)}
+                                onMouseLeave={() => setActiveMenu(null)}
+                            >
+                                <Link href={`/categories/${item.toLowerCase()}`}>{item}</Link>
+                                {/* DROPDOWN */}
+                                {activeMenu === item && (
+                                    <div className="absolute left-0 top-full w-full  " onMouseEnter={() => setActiveMenu(item)}
+                                        onMouseLeave={() => setActiveMenu(null)}>
+                                        <div className="bg-primary shadow-xl px-4">
+                                            <ul className="flex gap-4 justify-center">
+                                                {categories[item].map(({ name, slug }) => (
+                                                    <Link
+                                                    href={`/categories/${item.toLowerCase()}?cat=${slug}`}
+                                                        key={name}
+                                                        className="flex flex-col items-center gap-3 px-6 py-6 cursor-pointer hover:bg-tertiary/80
+                          hover:text-primary  transition text-primarytext"
+                                                    >
+                                                        
+                                                        <span>{name}</span>
+                                                    </Link>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </nav>
+  )
+}
+
+export default CategoryNavList;
