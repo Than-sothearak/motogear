@@ -31,7 +31,7 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
   };
 
   return (
-    <div className="w-full bg-primary mx-auto flex gap-10 flex-col max-lg:min-h-screen h-full">
+    <div className="w-full bg-primary mx-auto flex gap-10 flex-col max-lg:h-screen h-full">
       <div className="container mx-auto my-10 space-y-10 bg-primary px-2">
         <div className="flex justify-between items-center max-lg:flex-col gap-4 max-md:justify-center">
           <div className="flex justify-center">

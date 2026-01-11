@@ -24,7 +24,7 @@ const productPage = async ({ pageName, searchParams }) => {
   const { products, count, ITEM_PER_PAGE } = await getProducts(query, page, status);
   const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
   return (
-    <div className="p-4 justify-center bg-primary rounded-lg space-y-3 max-h-full">
+    <div className="p-4 justify-center bg-primary rounded-lg space-y-3 h-screen">
       <div className="flex justify-between items-center gap-4">
         <div>
           <SearchCompoenent
@@ -39,7 +39,7 @@ const productPage = async ({ pageName, searchParams }) => {
           Add new
         </Link>
       </div>
-    <div className="min-h-[60vh]">
+    <div>
 
         <ProductTable
 

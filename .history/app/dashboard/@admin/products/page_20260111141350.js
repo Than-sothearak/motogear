@@ -39,7 +39,7 @@ const productPage = async ({ pageName, searchParams }) => {
           Add new
         </Link>
       </div>
-    <div className="min-h-[60vh]">
+    <div className="max-lg:min-h-[70vh]">
 
         <ProductTable
 

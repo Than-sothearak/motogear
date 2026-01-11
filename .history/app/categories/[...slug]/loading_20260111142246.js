@@ -1,7 +1,7 @@
 "use client"
 const Loading = () => {
   return (
-    <div className="flex gap-4 items-center justify-center rounded-md bg-primary p-10 lg:h-full min-h-[80vh] ">
+    <div className="flex gap-4 items-center justify-center rounded-md bg-primary p-10 lg:h-full min-h-[60vh] ">
       <div role="status">
         <svg
           aria-hidden="true"

@@ -31,9 +31,9 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
   };
 
   return (
-    <div className="w-full bg-primary mx-auto flex gap-10 flex-col max-lg:min-h-screen h-full">
+    <div className="w-full bg-primary mx-auto flex gap-10 flex-col">
       <div className="container mx-auto my-10 space-y-10 bg-primary px-2">
-        <div className="flex justify-between items-center max-lg:flex-col gap-4 max-md:justify-center">
+        <div className="flex justify-between items-center max-md:flex-col gap-4 max-md:justify-center">
           <div className="flex justify-center">
             <Link
               href={`/products`}
@@ -58,7 +58,7 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
             </Link>) : ( <Link href={`/categories`} className="hover:underline">
               All
             </Link>)}
-          <div className="flex max-md:flex-wrap gap-6 md:gap-2 max-lg:justify-center">
+          <div className="flex max-lg:flex-wrap gap-6 lg:gap- 2">
               {categories.length !== 0 &&
               <div className="text-tertiary/50 border h-6"></div>}
             {categories.map((cat, index) => (

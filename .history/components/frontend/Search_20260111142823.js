@@ -21,7 +21,7 @@ const Search = () => {
         replace('/', { scroll: false });
       }
     });
-  }, 500);
+  }, 600);
 
   return (
     <div className="relative max-lg:order-2 w-full">
