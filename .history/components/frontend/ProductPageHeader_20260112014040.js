@@ -1,11 +1,10 @@
-"use client";
-import ProductBox from "@/components/frontend/ProductBox";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+"use client"
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState } from 'react'
 
-const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
-  const searchParams = useSearchParams();
+export const ProductPageHeader = ({slug}) => {
+      const searchParams = useSearchParams();
   const current = new URLSearchParams(searchParams.toString());
   const router = useRouter();
 
@@ -31,8 +30,7 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
   };
 
   return (
-    <div className="w-full bg-primary mx-auto flex gap-10 flex-col max-lg:min-h-screen h-full">
-      <div className="container mx-auto my-10 space-y-10 bg-primary px-2">
+    <div className='container mt-10 m-auto'>
         <div className="flex justify-between items-center max-lg:flex-col gap-4 max-md:justify-center">
           <div className="flex justify-center">
             <Link
@@ -96,23 +94,6 @@ const ProductsPage = ({ slug, categories, products, groupedProducts }) => {
             </div>
           </div>
         </div>
-  
-        <div>
-          {products.length > 0 ? (
-            <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-4">
-              {products.map((item, index) => (
-                <div key={item._id} className="">
-                  <ProductBox {...item} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className='w-full h-screen lg:h-full flex justify-center items-center"'>No product</div>
-          )}
-        </div>
-      </div>
     </div>
-  );
-};
-
-export default ProductsPage;
+  )
+}
