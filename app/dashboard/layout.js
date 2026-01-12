@@ -54,15 +54,17 @@ export default async function DashboardLayout({ children, admin}) {
           </div>
         </div>
       ) : (
-       <div className="p-4 container m-auto">
-         <div className="flex gap-4 p-4 justify-center items-center">
+       <div className="p-4 container m-auto h-screen">
+     <div className="min-w-80 flex flex-col items-center">
+          <div className="flex gap-4 p-4 justify-center items-center min-w-80">
           <h1>Welcome back user</h1>
           <h1>{session.user.username}</h1>
           <Image src={session.user.imageUrl} height={20} width={40} alt={session.user.imageUrl} className="rounded-full"/>
         </div>
-       <div className="">
+       <div className="w-32">
          <Logout />
        </div>
+     </div>
        </div>
       )}
     </>

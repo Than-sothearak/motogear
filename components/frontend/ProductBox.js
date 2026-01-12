@@ -8,6 +8,8 @@ const ProductBox = ({ productName, basePrice, brandName, imageUrls, slug}) => {
        <Link href={`/products/${slug}`} className='w-full space-y-4'>
          <div className='relative h-48 bg-white overflow-hidden p-4 rounded-sm hover:scale-105 transition-all duration-300 scale-100 '>
           <Image
+            loading="lazy"
+            quality={50}
             src={imageUrls[0] || "https://images.unsplash.com/photo-1633783714421-332b7f929148?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bm8lMjBpbWFnZXxlbnwwfHwwfHx8MA%3D%3D"}
             fill
             alt={productName}

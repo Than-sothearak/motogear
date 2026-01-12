@@ -191,7 +191,7 @@ export async function getProductFilter(slug, catParams, query, limit = 16, page 
   }
 }
 
-// Fetch products with pagination and search
+// Fetch products with pagination and search for admin
 export async function getProducts(query, page, status, category) {
   await mongoDb();
   let queryData = {};
@@ -275,7 +275,7 @@ export async function getAllProducts(page, limit) {
   const skip = ITEM_PER_PAGE * (page - 1)
   const count = await Product.countDocuments();
 
-  const results =await Product.find()
+  const results =await Product.find().sort({createdAt: -1})
   .skip(skip)
   .limit(ITEM_PER_PAGE)
   .lean()

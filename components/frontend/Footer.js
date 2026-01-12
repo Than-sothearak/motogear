@@ -12,7 +12,7 @@ function Footer() {
   const supportLinks = ["Contact Us", "FAQ", "Shipping", "Returns", "Warranty"];
   return (
     <div className="max-lg:z-20 max-lg:sticky max-lg:bottom-0 bg-primary max-lg:flex max-lg:justify-center">
-      <div className=" w-full h-24 shadow-xl rounded-t-xl border-t border border-t-black  lg:hidden">
+      <div className=" w-full h-16 shadow-xl rounded-t-xl border-t border border-t-black  lg:hidden">
       <div className="flex justify-between w-full font-bold">
         <Link
           href={`/`}

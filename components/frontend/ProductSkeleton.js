@@ -20,7 +20,7 @@ const ProductBoxSkeleton = () => {
 
 const ProductGridSkeleton = ({ count = 8 }) => {
   return (
-    <div className="container m-auto grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-4  mt-4">
+    <div className="px-2 container m-auto grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-4  mt-4">
       {Array.from({ length: count }).map((_, i) => (
         <ProductBoxSkeleton key={i} />
       ))}
