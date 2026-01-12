@@ -6,10 +6,14 @@ import { Service } from "@/models/Service";
 import { Navbar } from "@/components/layout/Navbar";
 import Image from "next/image";
 import Logout from "@/components/auth/Logout";
+import { getUser } from "@/actions/users";
+
+
 
 export default async function DashboardLayout({ children, admin}) {
 
   const session = await auth();
+
   if (!session) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -18,6 +22,10 @@ export default async function DashboardLayout({ children, admin}) {
     );
   }
   let services = [];
+
+  console.log(session?.user?._id)
+  // const user = await getUser(session?.user?._id)
+  // const isAdmin = user?.isAdmin
   if (session?.user?.isAdmin) {
     services = await Service.find({ status: "pending" });
   }

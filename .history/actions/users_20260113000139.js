@@ -245,9 +245,8 @@ export async function updateUser(userId, prevState, formData) {
       const salt = await bcrypt.genSalt(10);
       userData.password = await bcrypt.hash(password, salt);
     }
+    revalidatePath('/dashbaord/users')
     await User.updateOne({ _id: userId }, userData);
-   revalidatePath('/dashbaord/users')
-
     return { success: "User successfully updated", message: "User successfully updated" }
   } catch (err) {
     console.log("Error updating user:", err);
