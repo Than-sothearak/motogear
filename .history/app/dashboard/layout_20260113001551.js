@@ -7,9 +7,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import Image from "next/image";
 import Logout from "@/components/auth/Logout";
 
+
+
 export default async function DashboardLayout({ children, admin}) {
 
   const session = await auth();
+
   if (!session) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -18,6 +21,7 @@ export default async function DashboardLayout({ children, admin}) {
     );
   }
   let services = [];
+
   if (session?.user?.isAdmin) {
     services = await Service.find({ status: "pending" });
   }

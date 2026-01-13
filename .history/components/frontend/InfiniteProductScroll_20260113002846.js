@@ -49,7 +49,7 @@ export const InfiniteProductScroll = ({ initialProducts, total }) => {
         </div>
         {products?.length < count ?
           <div ref={ref}>
-            <ProductGridSkeleton count={8} />
+            <ProductGridSkeleton count={4} />
           </div> : <div className="container m-auto text-center">No more content</div>
 
         }
