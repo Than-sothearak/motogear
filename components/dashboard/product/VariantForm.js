@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BiPlusCircle, BiTrash } from "react-icons/bi";
+import { nanoid } from "nanoid";
 
 const VariantForm = ({
   setVariants,
@@ -9,6 +10,7 @@ const VariantForm = ({
   properties,
   variants,
   setFormData,
+  productData,
 }) => {
   const SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
 
@@ -26,8 +28,16 @@ const VariantForm = ({
   const addVariants = () => {
     setVariants((prev) => [
       ...prev,
-      { size: "", color: "", stock: 0, price: 0, sku: "",},
+      { id: nanoid(), size: "", color: "", stock: 0, price: 0, sku: "" },
     ]);
+  };
+
+  const generateSKU = ({ product, size, color }) => {
+    return [product, size, color]
+      .filter(Boolean)
+      .join("-")
+      .toUpperCase()
+      .replace(/\s+/g, "-");
   };
 
   const removeVariants = (index) => {
@@ -69,30 +79,28 @@ const VariantForm = ({
       })
     );
   };
-const handleRemoveVariantImage = (variantIndex) => {
-  const variant = variants[variantIndex];
-  if (!variant) return;
+  const handleRemoveVariantImage = (variantIndex) => {
+    const variant = variants[variantIndex];
+    if (!variant) return;
 
-  const removedImage = variant.images; // store image URL
+    const removedImage = variant.images; // store image URL
 
-  // Remove image from variants
-  const newVariants = [...variants];
-  newVariants[variantIndex] = { ...variant, images: null, image: null }; // remove both existing and uploaded
+    // Remove image from variants
+    const newVariants = [...variants];
+    newVariants[variantIndex] = { ...variant, images: null, image: null }; // remove both existing and uploaded
 
-  setVariants(newVariants);
+    setVariants(newVariants);
 
-  // Update removedImages in formData
-  if (removedImage) {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      removedImages: Array.from(
-        new Set([...(prevFormData.removedImages || []), removedImage])
-      ),
-    }));
-  }
-};
-
-console.log(variants)
+    // Update removedImages in formData
+    if (removedImage) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        removedImages: Array.from(
+          new Set([...(prevFormData.removedImages || []), removedImage])
+        ),
+      }));
+    }
+  };
 
   return (
     <div className="flex gap-4 max-2xl:flex-col">
@@ -161,9 +169,9 @@ console.log(variants)
           >
             <BiPlusCircle size={22} /> <p>Add variant</p>
           </button>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm flex flex-col-reverse">
             {variants.map((variant, index) => (
-              <div key={index} className="flex-col flex gap-4">
+              <div key={variant.id} className="flex-col flex gap-4">
                 <div className="flex gap-2 max-sm:flex-wrap justify-end items-end">
                   <div className="w-full flex flex-col">
                     <label>Size</label>
@@ -175,7 +183,16 @@ console.log(variants)
                       value={variant.size}
                       onChange={(e) => {
                         const newVariants = [...variants];
-                        newVariants[index].size = e.target.value;
+                        const size = e.target.value;
+
+                        newVariants[index].size = size;
+
+                        newVariants[index].sku = generateSKU({
+                          product: productData.productName,
+                          size,
+                          color: newVariants[index].color,
+                        });
+
                         setVariants(newVariants);
                       }}
                     >
@@ -196,7 +213,16 @@ console.log(variants)
                       value={variant.color}
                       onChange={(e) => {
                         const newVariants = [...variants];
-                        newVariants[index].color = e.target.value;
+                        const color = e.target.value;
+
+                        newVariants[index].color = color;
+
+                        newVariants[index].sku = generateSKU({
+                          product: productData.productName,
+                          size: newVariants[index].size,
+                          color,
+                        });
+
                         setVariants(newVariants);
                       }}
                     >
@@ -227,7 +253,7 @@ console.log(variants)
 
                   <div className="flex flex-col w-full">
                     <label>Price USD</label>
-                    <input
+                   <input
                       required
                       className="p-2 border rounded-lg w-full"
                       placeholder="Price"
@@ -318,7 +344,6 @@ console.log(variants)
 
                         {variant.image && (
                           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 items-center">
-                         
                             <div className="relative w-28 aspect-square rounded-lg overflow-hidden border">
                               <Image
                                 src={variant.image.preview}

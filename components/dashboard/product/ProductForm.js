@@ -9,6 +9,8 @@ import ProductDescription from "./ProductDescription";
 import Image from "next/image";
 import { BiTrash } from "react-icons/bi";
 import DescriptionView from "./DescriptionView";
+import { EyeIcon } from "lucide-react";
+import Link from "next/link";
 
 function ProductForm({ productData, categories }) {
   const router = useRouter();
@@ -155,23 +157,26 @@ function ProductForm({ productData, categories }) {
       };
     });
   };
-
   return (
     <div className="container mx-auto p-6 max-sm:px-2 max-sm:py-3 bg-white rounded-xl shadow-md">
-
-
-
       <form className="mb-4" onSubmit={handleSubmit}>
         {/* Header + Edit/Cancel */}
         <div className=" ">
       <div className="flex justify-between">
             {!productData ?
             <h1 className="text-2xl font-bold">
-              {isEditing ? "Add Product" : "Product Details"}
-            </h1> :
-            <h1 className="text-2xl font-bold">
-              {isEditing ? "Edit Product" : "Product Details"}
-            </h1>}
+              {isEditing ? "Add Product" : "Product Details"}   
+            </h1>
+               
+            :
+         <div className="flex gap-2 items-center">
+             <h1 className="text-2xl font-bold">
+              {isEditing ? "Edit Product" : "Product Details"} 
+            </h1>
+            <Link href={`/products/${productData?.slug}`} ><EyeIcon /></Link>
+         </div>
+            }
+      
           <div>
             <div className="flex gap-2">
             {!isEditing ? (
@@ -204,22 +209,12 @@ function ProductForm({ productData, categories }) {
               </div>
             )}
           </div>
-        
-         
-    
-      
           </div>
       </div>
-    <p className="text-sm">Manage your product details</p>
-        
+    <p className="text-sm">Manage your product details</p>        
         </div>
-
-
         <div>
-
-
           <div
-
             className="space-y-4 flex flex-col justify-end"
           >
             <div className="flex max-sm:flex-col gap-4">

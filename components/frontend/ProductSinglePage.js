@@ -15,7 +15,8 @@ export default function ProductSinglePage({ product, session }) {
   const [availableSizes, setAvailableSizes] = useState([]);
   const [stock, setStock] = useState(0);
   const [quantity, setQuantity] = useState(1);
-
+  
+  const isStock = product.variants.some(v => v.stock > 0)
   // Init colors & sizes
   useEffect(() => {
     setAvailableColors([...new Set(variants.map(v => v.color))]);
@@ -29,9 +30,9 @@ export default function ProductSinglePage({ product, session }) {
       setStock(0);
       return;
     }
-    if (selectedColor) {
+    if (selectedColor && selectedSize) {
       const variant = variants.find(
-        v => v.color === selectedColor
+        v => v.color === selectedColor && v.size === selectedSize
       );
       if (variant) {
         setStock(variant.stock);
@@ -129,7 +130,7 @@ export default function ProductSinglePage({ product, session }) {
                     }
            ${!hasStock
                       ? "opacity-100 cursor-not-allowed"
-                      : "hover:border-primary"
+                      : "hover:border-tertiary"
                     }
           `}
                 >
@@ -163,7 +164,7 @@ export default function ProductSinglePage({ product, session }) {
                     }
             ${!hasStock
                       ? "opacity-100 cursor-not-allowed"
-                      : "hover:border-primary"
+                      : "hover:border-tertiary"
                     }
           `}
                 >
@@ -177,11 +178,13 @@ export default function ProductSinglePage({ product, session }) {
 
 
         {/* Stock info */}
-        {selectedColor && selectedSize && (
+        {selectedColor && selectedSize ? (
           <p className={`mt-2 ${stock > 0 ? "text-green-600" : "text-red-600"}`}>
             {stock > 0 ? `${stock} in stock` : "Out of stock"}
           </p>
-        )}
+        ) :
+        isStock ? <p className="mt-2 ">Choose the color and size</p> : <p className="mt-2">Unavailable</p>
+        }
 
         {/* Quantity & Add to Cart */}
         <div className="mt-6 flex items-center gap-4">
@@ -203,7 +206,7 @@ export default function ProductSinglePage({ product, session }) {
             </button>
           </div>
           <button
-            className={`bg-tertiary text-primary px-6 py-2 border rounded-md font-semibold hover:bg-primary hover:text-primarytext transition-all ${stock === 0 ? "opacity-50 cursor-not-allowed" : ""
+            className={`bg-tertiary text-primary px-6 py-2 border rounded-md font-semibold  hover:text-primarytext transition-all ${stock === 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
             disabled={stock === 0}
           >

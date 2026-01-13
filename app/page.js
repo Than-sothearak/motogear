@@ -2,9 +2,9 @@ import { getProducts } from "@/actions/products";
 import Categories from "@/components/frontend/Categories";
 import FeaturedProducts from "@/components/frontend/FeatureProduct";
 import Hero from "@/components/frontend/Hero";
-import HeroVideo from "@/components/frontend/HeroVideo";
 import Loading from "@/components/frontend/loading";
 import PromoBanner from "@/components/frontend/PromoBanner";
+import { HeroSection } from "@/components/server/heroSection";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
@@ -12,8 +12,9 @@ export default async function Home() {
 
   return (
     <div className="">
-      <HeroVideo />
+          <HeroSection />
       <Suspense fallback={<Loading />}>
+  
         <GetFeatureProducts />
       </Suspense>
       <Hero />
