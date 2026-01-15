@@ -1,5 +1,4 @@
-import SideBarClient from "@/components/layout/SideBarClient";
-import { User } from "@/models/User";
+import SideBarClient from "./SideBarClient";
 
 export default async function Sidebar({ session ,navigation,servicesCount, link }) {
    

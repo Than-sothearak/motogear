@@ -192,82 +192,71 @@ export async function getProductFilter(slug, catParams, query, limit = 16, page 
 }
 
 // Fetch products with pagination and search for admin
-export async function getProducts(query, page, status, category) {
+export async function getProducts(query, page = 1, status, category) {
   await mongoDb();
-  let queryData = {};
-  if (status) {
-    queryData.status = status;
-  }
 
   const ITEM_PER_PAGE = 10;
+
+  // Fetch all categories for reference
   const allCategories = await Category.find();
+
   try {
+    // Build the base filter
+    let filter = {};
+    if (status) {
+      filter.status = status; // filter by status if provided
+    }
+    if (category) {
+      // Find the category by slug or ID
+      const selectedCategory = allCategories.find(
+        (cat) => cat.slug === category
+      );
+
+      if (selectedCategory) {
+        // Include children categories if needed
+        const childCategoryIds = allCategories
+          .filter((cat) => cat.parentCategory?.toString() === selectedCategory._id.toString())
+          .map((cat) => cat._id);
+
+        filter.category = { $in: [selectedCategory._id, ...childCategoryIds] };
+      }
+    }
+
     if (query) {
-
-      // Find categories that match the query (parent or child)
+      // Search in productName or categories
       const matchingCategoryIds = allCategories
-        .filter(cat => cat.name.toLowerCase().includes(query.toLowerCase()))
-        .map(cat => cat._id);
+        .filter((cat) => cat.name.toLowerCase().includes(query.toLowerCase()))
+        .map((cat) => cat._id);
 
-      // Optionally include children of matched parents
       const childCategoryIds = allCategories
-        .filter(cat => cat.parentCategory && matchingCategoryIds.includes(cat.parentCategory))
-        .map(cat => cat._id);
+        .filter((cat) => cat.parentCategory && matchingCategoryIds.includes(cat.parentCategory))
+        .map((cat) => cat._id);
 
       const allCategoryIds = [...new Set([...matchingCategoryIds, ...childCategoryIds])];
 
-      const products = await Product.find({
-        $or: [{ productName: { $regex: query, $options: "i" } }, { category: { $in: allCategoryIds } },],
-      }).populate("category");
-      const count = products.length;
-      return { products, count, ITEM_PER_PAGE };
+      filter.$or = [
+        { productName: { $regex: query, $options: "i" } },
+        { category: { $in: allCategoryIds } },
+      ];
     }
 
-    if (queryData) {
-      const count = await Product.countDocuments(queryData);
-      const products = await Product.find(queryData)
-        .sort({ createdAt: -1 })
-        .limit(ITEM_PER_PAGE)
-        .populate("category")
-        .skip(ITEM_PER_PAGE * (page - 1));
+    // Count total documents for pagination
+    const count = await Product.countDocuments(filter);
 
-      return { products, count, ITEM_PER_PAGE };
-    }
-
-    //    if (sort) {
-    //   switch (sort) {
-    //     case "active":
-    //       sort = { createdAt: 1 };
-    //       break;
-    //     case "date-desc":
-    //       sort = { createdAt: -1 };
-    //       break;
-    //     case "status-asc":
-    //       sort = { status: 1 };
-    //       break;
-    //     case "status-desc":
-    //       sort = { status: -1 };
-    //       break;
-    //     case "one bed room":
-    //       sort = { status: -1 };
-    //       break;
-    //     default:
-    //       sort = { createdAt: -1 }; // fallback
-    //   }
-    // }
-    const count = await Product.countDocuments();
-    const products = await Product.find()
+    // Fetch products with pagination
+    const products = await Product.find(filter)
       .sort({ createdAt: -1 })
       .limit(ITEM_PER_PAGE)
-      .populate("category")
-      .skip(ITEM_PER_PAGE * (page - 1));
+      .skip(ITEM_PER_PAGE * (page - 1))
+      .populate("category");
 
-    return { products, count, ITEM_PER_PAGE };
+    return { products, count, ITEM_PER_PAGE, categories: allCategories };
   } catch (err) {
     console.error(err);
     throw new Error("Failed to fetch products!");
   }
 }
+
 export async function getAllProducts(page, limit) {
   const ITEM_PER_PAGE = limit || 8
   const skip = ITEM_PER_PAGE * (page - 1)

@@ -17,11 +17,10 @@ const productPage = async ({ pageName, searchParams }) => {
     );
   }
 
-  const { query } = await searchParams;
-  const { status } = await searchParams
+  const { query,status, category } = await searchParams;
 
   const { page } = await searchParams || 1;
-  const { products, count, ITEM_PER_PAGE } = await getProducts(query, page, status);
+  const { products, count, ITEM_PER_PAGE, categories } = await getProducts(query, page, status, category);
   const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
   return (
     <div className="p-4 justify-center bg-primary rounded-lg space-y-3 max-h-full">
@@ -40,15 +39,13 @@ const productPage = async ({ pageName, searchParams }) => {
         </Link>
       </div>
     <div className="min-h-[60vh]">
-
         <ProductTable
-
+        categories={JSON.parse(JSON.stringify(categories))}
         products={JSON.parse(JSON.stringify(products))}
         totalPages={countPage}
         currentPage={page}
         query={query}
       />
-
       <Pagination
         pathname={`products`}
         totalPages={countPage}

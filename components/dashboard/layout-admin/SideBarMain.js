@@ -1,17 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import Logout from "../auth/Logout";
 import { IoClose } from "react-icons/io5";
 import { HiMenuAlt2 } from "react-icons/hi";
-import ChooseSingleImageFile from "../dashboard/ChooseSingleImage";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
 import Link from "next/link";
 import Image from "next/image";
-
-
-import ConnectTelegram from "../dashboard/ButtonConnectTelegram";
 import { SidebarListMobile } from "./SidebarListMobile";
 import { SidebarList } from "./SidebarList";
+import Logout from "@/components/auth/Logout";
+import ConnectTelegram from "../ButtonConnectTelegram";
+import ChooseSingleImageFile from "../ChooseSingleImage";
 
 const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,servicesCount,link }) => {
   const [isClicked, setIsClicked] = useState(false);

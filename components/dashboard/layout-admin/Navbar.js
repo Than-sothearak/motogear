@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { IoMdMenu } from "react-icons/io";
 import { useState } from "react";
-import SideBarMain from "@/components/layout/SideBarMain";
+import SideBarMain from "./SideBarMain";
 
 
 export const Navbar = ({ session, user, navigation, servicesCount, link}) => {

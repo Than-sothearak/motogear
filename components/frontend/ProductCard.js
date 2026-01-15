@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React from 'react'
 import ProductBox from './ProductBox'
 
@@ -15,6 +14,7 @@ const ProductCard = ({ productName, basePrice, brandName, imageUrls, _id, slug }
         brandName={brandName}
         imageUrls={imageUrls}
         slug={slug}
+        _id={_id}
 
       />
 

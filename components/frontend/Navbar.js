@@ -29,10 +29,11 @@ const Navbar = async () => {
                         <Search />
                         {/* Account */}
                         <div className="flex items-center space-x-2 max-lg:order-3">
-                            <Cart />
+                           
                             <Suspense fallback={<div>Loading</div>}>
                                 <ProfileContent session={session}/>
                             </Suspense>
+                             <Cart />
                         </div>
                     </div>
 

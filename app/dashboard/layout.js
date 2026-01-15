@@ -1,10 +1,11 @@
 import { auth } from "@/auth";
-import Sidebar from "@/components/layout/Sidebar";
-import { pageNavigation, userNavigation } from "@/lib/navLinks";
-import Footer from "@/components/layout/Footer";
+import { pageNavigation } from "@/lib/navLinks";
+
 import { Service } from "@/models/Service";
-import { Navbar } from "@/components/layout/Navbar";
 import Image from "next/image";
+import Sidebar from "@/components/dashboard/layout-admin/Sidebar";
+import { Navbar } from "@/components/dashboard/layout-admin/Navbar";
+import Footer from "@/components/dashboard/layout-admin/Footer";
 import Logout from "@/components/auth/Logout";
 
 export default async function DashboardLayout({ children, admin}) {
