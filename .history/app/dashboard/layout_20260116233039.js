@@ -1,0 +1,61 @@
+import { auth } from "@/auth";
+import { pageNavigation } from "@/lib/navLinks";
+
+import { Service } from "@/models/Service";
+import Sidebar from "@/components/dashboard/layout-admin/Sidebar";
+import { Navbar } from "@/components/dashboard/layout-admin/Navbar";
+import Footer from "@/components/dashboard/layout-admin/Footer";
+
+export default async function DashboardLayout({ children, admin, user }) {
+
+  const session = await auth();
+  if (!session) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold">Unauthorized</h1>
+      </div>
+    );
+  }
+  let services = [];
+  if (session?.user?.isAdmin) {
+    services = await Service.find({ status: "pending" });
+  }
+
+  return (
+    <>
+      {session?.user?.isAdmin ? (
+        <div className="flex bg-secondary">
+          <div className="">
+            <Sidebar
+              navigation={pageNavigation}
+              session={session}
+              servicesCount={services.length}
+              link={"/dashboard/users/"}
+            />
+          </div>
+          <div className="flex flex-col justify-between w-full lg:mx-4 lg:overflow-x-auto h-full">
+            <div className="">
+              <Navbar
+                link={"/dashboard/users/"}
+                servicesCount={services.length}
+                navigation={pageNavigation}
+                session={session}
+                user={session.user}
+              />
+              <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
+              <div className="max-lg:mx-2 overflow-x-auto my-4">{admin}</div>
+
+            </div>
+            <Footer />
+          </div>
+        </div>
+      ) : (
+        <div className="p-4 container m-auto h-screen">
+          <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
+          <div className="max-lg:mx-2 overflow-x-auto my-4">{user}</div>
+
+        </div>
+      )}
+    </>
+  );
+}
