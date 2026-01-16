@@ -1,4 +1,5 @@
 import { getProducts } from "@/actions/products";
+import ButtonShopNow from "@/components/frontend/ButtonShopNow";
 import Categories from "@/components/frontend/Categories";
 import FeaturedProducts from "@/components/frontend/FeatureProduct";
 import Hero from "@/components/frontend/Hero";
@@ -20,6 +21,7 @@ export default async function Home() {
       <Hero />
       <Categories />
       <PromoBanner />
+     <ButtonShopNow link='products'title='Shop now'/>
     </div>
   );
 }

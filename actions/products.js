@@ -4,48 +4,60 @@ import { mongoDb } from "@/utils/connectDB";
 import { Category } from "@/models/Category";
 
 export async function getProductsGroupedByParent(limit = 7) {
-  const result = await Product.aggregate([
-    // Join with category to get parent info
-    {
-      $lookup: {
-        from: "categories",
-        localField: "category",
-        foreignField: "_id",
-        as: "category",
-      },
+const result = await Category.aggregate([
+  // 1️⃣ Parent categories only
+  {
+    $match: {
+      parentCategory: null,
     },
-    { $unwind: "$category" },
+  },
 
-    // Only include parent categories
-    {
-      $match: {
-        "category.parentCategory": null,
-      },
+  // 2️⃣ Get child categories
+  {
+    $lookup: {
+      from: "categories",
+      localField: "_id",
+      foreignField: "parentCategory",
+      as: "children",
     },
+  },
 
-    // Sort products newest first
-    { $sort: { createdAt: -1 } },
-
-    // Group by category
-    {
-      $group: {
-        _id: "$category._id",
-        name: { $first: "$category.name" },
-        slug: { $first: "$category.slug" },
-        products: { $push: "$$ROOT" },
+  // 3️⃣ Get products from parent + children
+  {
+    $lookup: {
+      from: "products",
+      let: {
+        parentId: "$_id",
+        childIds: "$children._id",
       },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $or: [
+                { $eq: ["$category", "$$parentId"] }, // product in parent
+                { $in: ["$category", "$$childIds"] }, // product in child
+              ],
+            },
+          },
+        },
+        { $sort: { createdAt: -1 } },
+        { $limit: limit },
+      ],
+      as: "products",
     },
+  },
 
-    // Limit products array to N per category
-    {
-      $project: {
-        _id: 1,
-        name: 1,
-        slug: 1,
-        products: { $slice: ["$products", limit] },
-      },
+  // 4️⃣ Final output
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      slug: 1,
+      products: 1,
     },
-  ]);
+  },
+]);
 
   return result;
 }
@@ -194,9 +206,7 @@ export async function getProductFilter(slug, catParams, query, limit = 16, page 
 // Fetch products with pagination and search for admin
 export async function getProducts(query, page = 1, status, category) {
   await mongoDb();
-
   const ITEM_PER_PAGE = 10;
-
   // Fetch all categories for reference
   const allCategories = await Category.find();
 

@@ -35,7 +35,7 @@ const ProductBox = ({
 
         <div className="">
           <h3 className="font-semibold whitespace-nowrap overflow-clip group-hover:underline w-full">
-            {productName}{_id}
+            {productName}
           </h3>
           <p className="text-sm text-gray-500">{brandName}</p>
         </div>

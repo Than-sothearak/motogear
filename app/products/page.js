@@ -1,3 +1,4 @@
+import ButtonShopNow from "@/components/frontend/ButtonShopNow";
 import ProductGridSkeleton from "@/components/frontend/ProductSkeleton";
 import { ProductsFetchInfinite } from "@/components/server/productsFetchInfinite";
 import React, { Suspense } from "react";
@@ -16,7 +17,7 @@ const productsPage = async ({ params, searchParams }) => {
           pathname={"/products"}
         />
       </Suspense>
-
+         <ButtonShopNow link='categories'title='Explore more'/>
     </div>
   );
 };

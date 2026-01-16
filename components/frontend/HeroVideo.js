@@ -3,6 +3,7 @@
 import { myFont } from "@/lib/myFont";
 import Link from "next/link";
 import React from "react";
+import ButtonShopNow from "./ButtonShopNow";
 
 const HeroVideo = ({ hero }) => {
   return (
@@ -32,12 +33,8 @@ const HeroVideo = ({ hero }) => {
           <p className="text-lg md:text-xl text-gray-200 mb-8">
             {hero.subtitle}
           </p>
-          <Link
-            href={hero.btnLink}
-            className="bg-black hover:bg-black/60 px-4 py-1 rounded-full text-3xl text-primary font-semibold uppercase"
-          >
-            {hero.btnText}
-          </Link>
+          <ButtonShopNow link={hero.btnLink} title={hero.btnText}/>
+     
         </div>
       </div>
     </section>
